@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const CustomerSchema = new mongoose.Schema({
     user: {
-        type: moongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
     history: [
         {
             centerId: {
-                type: moongoose.Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: 'center'
             },
             from: {
@@ -19,6 +19,17 @@ const CustomerSchema = new mongoose.Schema({
             },
         }
     ],
+    location: {
+        longitude: {
+            type: String
+        },
+        latitude: {
+            type: String
+        },
+        address: {
+            type: String
+        }
+    },
     createAt: {
         type: Date,
         default: Date.now

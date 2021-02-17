@@ -4,13 +4,19 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
+const Customer = require('../../models/Customer')
+const Center = require('../../models/Center')
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const _ = require('lodash')
+const constant = require('../../config/constant')
 //@route    POST api/users
 
 // @desc    Test route
 
 // @access  Public
+
+// create user
 router.post(
   '/',
   [
@@ -21,7 +27,13 @@ router.post(
     check(
       'password',
       'Please enter a password with 6 or more character'
-    ).isLength({ min: 6 })
+    ).isLength({ min: 6 }),
+    check('role', 'role is invalid').not().isEmpty(),
+    check('location','location is invalid').optional(),
+    check('website','website is invalid').optional(),
+    check('sports','sports is invalid').optional(),
+    check('social','social is invalid').optional(),
+    check('bio','bio is invalid').optional(),
   ],
   async (req, res) => {
     const error = validationResult(req);
@@ -29,11 +41,11 @@ router.post(
       return res.status(400).json({ error: error.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, role, location, sports, bio, social, website } = req.body;
     try {
       let user = await User.findOne({ email });
-      if (user) {
-        res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+      if (!_.isEmpty(user)) {
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
       // See if user exists
       const avatar = gravatar.url(email, {
@@ -46,7 +58,8 @@ router.post(
         name,
         email,
         avatar,
-        password
+        password,
+        role
       });
       // Get users gravatar
 
@@ -69,11 +82,39 @@ router.post(
         { expiresIn: 36000 },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token, role });
         }
       );
       // Return jsonwebtoken
-    } catch (err) {
+      switch (role) {
+        case constant.role.CUSTOMER:
+          if(!_.isEmpty(location?.longitude) && !_.isEmpty(location?.latitude) && !_.isEmpty(location?.address)) {
+            customer = new Customer({
+              user: user.id,
+              location,
+            })
+          await customer.save();
+          }
+          break;
+        case constant.role.CENTER:
+          if(!_.isEmpty(location?.longitude) && !_.isEmpty(location?.latitude) && !_.isEmpty(location?.address)) {
+            center = new Center({
+              user: user.id,
+              website,
+              sports,
+              location,
+              bio,
+              social,
+              status: constant.statusCenter.REGISTER,
+            })
+          await center.save();
+          }
+          break;
+        default:
+          res.status(400).json({ errors: [{ msg: 'role is not define' }] });
+          break;
+      }
+    } catch (err) { 
       console.error(err.message);
       res.status(500).send('Server error');
     }
