@@ -29,15 +29,16 @@ const Login = ({ login, isAuthenticated }) => {
 
   return (
     <Fragment>
-      <h1 className='large text-primary'>Sign In</h1>
+      <br/> 
+      <h1 className='text-primary'>Đăng Nhập Tài khoản Để Bắt Đầu Với TomFit</h1>
       <p className='lead'>
-        <i className='fas fa-user'></i> Sign Into Your Account
+        <i className='fas fa-user'></i> Nhập Tài Khoản Của Bạn
       </p>
       <form className='form' onSubmit={e => onSubmit(e)}>
         <div className='form-group'>
           <input
             type='email'
-            placeholder='Email Address'
+            placeholder='Địa chỉ Email'
             name='email'
             value={email}
             onChange={e => onChange(e)}
@@ -46,17 +47,17 @@ const Login = ({ login, isAuthenticated }) => {
         <div className='form-group'>
           <input
             type='password'
-            placeholder='Password'
+            placeholder='Mật Khẩu'
             name='password'
             minLength='6'
             value={password}
             onChange={e => onChange(e)}
           />
         </div>
-        <input type='submit' className='btn btn-primary' value='Login' />
+        <input type='submit' className='button button-primary' value='Đăng Nhập' />
       </form>
       <p className='my-1'>
-        Don't have an account? <Link to='/register'>Sign Up</Link>
+        Don't have an account? <Link to='/register'>Đăng Kí</Link>
       </p>
     </Fragment>
   );

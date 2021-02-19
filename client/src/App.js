@@ -1,6 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import Navbar from './components/layout/Navbar';
+import Header from './componentss/layout/Header';
+import Footer from './componentss/layout/Footer';
+
 import Landing from './components/layout/Landing';
+import Home from './views/Home'
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import './App.css';
@@ -34,8 +38,12 @@ const App = () => {
       <div className='App'>
         <Router>
           <Fragment>
-            <Navbar />
-            <Route exact path='/' component={Landing} />
+            {/* <Navbar /> */}
+            <Header navPosition="right" className="reveal-from-bottom"/>
+            {/* <Route exact path='/' component={Landing} /> */}
+            <main className="site-content">
+            <Route exact path='/' component={Home} />
+            </main>
             <section className='container'>
               <Alert />
               <Switch>
@@ -68,6 +76,7 @@ const App = () => {
                 <PrivateRoute exact path='/post/:id' component={Post} />
               </Switch>
             </section>
+            <Footer />
           </Fragment>
         </Router>
       </div>
