@@ -1,12 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
-import Navbar from './components/layout/Navbar';
+// import Navbar from './components/layout/Navbar';
 import Header from './componentss/layout/Header';
 import Footer from './componentss/layout/Footer';
 
-import Landing from './components/layout/Landing';
+// import Landing from './components/layout/Landing';
 import Home from './views/Home'
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+import LoginCustomer from './components/auth/LoginCustomer';
+import LoginCenter from './components/auth/LoginCenter';
+
+import RegisterCustomer from './components/auth/RegisterCustomer';
+
 import './App.css';
 import Alert from './components/layout/Alert';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -47,8 +50,9 @@ const App = () => {
             <section className='container'>
               <Alert />
               <Switch>
-                <Route exact path='/login' component={Login} />
-                <Route exact path='/Register' component={Register} />
+                <Route exact path='/login/customer' component={LoginCustomer} />
+                <Route exact path='/login/center' component={LoginCenter} />
+                <Route exact path='/Register/customer' component={RegisterCustomer} />
                 <Route exact path='/profiles' component={Profiles} />
                 <Route exact path='/profile/:id' component={Profile} />
                 <PrivateRoute exact path='/dashboard' component={Dashboard} />

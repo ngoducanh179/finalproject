@@ -1,39 +1,67 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
+import { GoogleComponent } from 'react-google-location'
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import axios from 'axios';
+import axios from 'axios';
 import { setAlert } from './../../actions/alert';
-import { register } from './../../actions/auth';
+import { registerCustomer } from './../../actions/auth';
 import PropTypes from 'prop-types';
+// import Geocode from "react-geocode";
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    password2: ''
+    password2: '',
+    location: {
+      latitude: '',
+      longitude: '',
+      address: ''
+    }
   });
-
-  const { name, email, password, password2 } = formData;
-
+  const API_KEY = 'e0aaf1f2dd2eb3c3335d003ddf08e90b'
+  const { name, email, password, password2, location } = formData;
   const onChange = e => {
+    const address = e.target.value
+    if(e.target.name === 'address') {
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      async function success(pos) {
+        var crd = pos.coords;
+        setFormData({...formData, location: {
+          latitude: crd.latitude,
+          longitude: crd.longitude,
+          address: address
+        }})
+      }
+  
+      function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    } else {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    }
   };
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
       setAlert('Password do not match', 'danger');
     } else {
-      register({ name, email, password });
+      registerCustomer({ name, email, password, location });
     }
   };
   if (isAuthenticated) {
     return <Redirect to='/dashboard' />;
   }
-
   return (
     <Fragment>
-      <br/>
+      <br />
       <h1 className='text-primary'>Tạo Tài Khoản Cùng TomFit</h1>
       <p className='lead'>
         <i className='fas fa-user'></i> Tạo Tài Khoản Của Bạn
@@ -77,6 +105,16 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
             onChange={e => onChange(e)}
           />
         </div>
+        <div>
+          <input
+            type='text'
+            placeholder='nhập địa chỉ'
+            name='address'
+            value={location.address}
+            onChange={e => onChange(e)}
+         />
+        </div>
+        <br />
         <input type='submit' className='button button-primary button-wide-mobile' value='Đăng Kí' />
       </form>
       <p className='my-1'>
@@ -86,13 +124,13 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   );
 };
 
-Register.propTypes = {
+RegisterCustomer.propTypes = {
   setAlert: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired,
+  registerCustomer: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { setAlert, register })(Register);
+export default connect(mapStateToProps, { setAlert, registerCustomer })(RegisterCustomer);

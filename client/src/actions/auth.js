@@ -10,6 +10,7 @@ import {
   LOGOUT,
   CLEAR_PROFILE
 } from './Types';
+import { role } from '../constans/constans'
 // import
 //Load User
 import setAuthToken from '../utils/setAuthToken';
@@ -31,15 +32,13 @@ export const loadUser = () => async dispatch => {
 };
 
 // Register User
-export const register = ({ name, email, password }) => async dispatch => {
+export const registerCustomer = ({ name, email, password, location }) => async dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   };
-
-  const body = JSON.stringify({ name, email, password });
-
+  const body = JSON.stringify({ name, email, password, location, role: role.CUSTOMER });
   try {
     const res = await axios.post('/api/users', body, config);
 
@@ -68,7 +67,6 @@ export const login = ({ email, password }) => async dispatch => {
   };
 
   const body = JSON.stringify({ email, password });
-
   try {
     const res = await axios.post('/api/auth', body, config);
 

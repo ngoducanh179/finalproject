@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { login } from '../../actions/auth';
 // import auth from '../../reducers/auth';
-const Login = ({ login, isAuthenticated }) => {
+const LoginCustomer = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -57,13 +57,13 @@ const Login = ({ login, isAuthenticated }) => {
         <input type='submit' className='button button-primary' value='Đăng Nhập' />
       </form>
       <p className='my-1'>
-        Don't have an account? <Link to='/register'>Đăng Kí</Link>
+        Don't have an account? <Link to='/register/customer'>Đăng Kí</Link>
       </p>
     </Fragment>
   );
 };
 
-Login.propTypes = {
+LoginCustomer.propTypes = {
   login: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
@@ -72,4 +72,5 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login })(LoginCustomer);
+  
