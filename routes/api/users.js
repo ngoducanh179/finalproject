@@ -38,7 +38,7 @@ router.post(
   async (req, res) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-      return res.status(400).json({ error: error.array() });
+      return res.status(400).json({ errors: error.array() });
     }
 
     const { name, email, password, role, location, sports, bio, social, website } = req.body;
@@ -88,7 +88,7 @@ router.post(
       // Return jsonwebtoken
       switch (role) {
         case constant.role.CUSTOMER:
-          if(!_.isEmpty(location?.longitude) && !_.isEmpty(location?.latitude) && !_.isEmpty(location?.address)) {
+          if(location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
             customer = new Customer({
               user: user.id,
               location,
@@ -97,7 +97,7 @@ router.post(
           }
           break;
         case constant.role.CENTER:
-          if(!_.isEmpty(location?.longitude) && !_.isEmpty(location?.latitude) && !_.isEmpty(location?.address)) {
+          if(location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
             center = new Center({
               user: user.id,
               website,
@@ -111,8 +111,7 @@ router.post(
           }
           break;
         default:
-          res.status(400).json({ errors: [{ msg: 'role is not define' }] });
-          break;
+          return res.status(400).json({ errors: [{ msg: 'role is not define' }] });
       }
     } catch (err) { 
       console.error(err.message);

@@ -20,7 +20,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
       address: ''
     }
   });
-  const API_KEY = 'e0aaf1f2dd2eb3c3335d003ddf08e90b'
+  // const API_KEY = 'e0aaf1f2dd2eb3c3335d003ddf08e90b'
   const { name, email, password, password2, location } = formData;
   const onChange = e => {
     const address = e.target.value

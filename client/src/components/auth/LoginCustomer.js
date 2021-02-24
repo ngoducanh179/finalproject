@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 // import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import { role } from '../../constans/constans'
 import { login } from '../../actions/auth';
 // import auth from '../../reducers/auth';
 const LoginCustomer = ({ login, isAuthenticated }) => {
@@ -19,7 +19,7 @@ const LoginCustomer = ({ login, isAuthenticated }) => {
   };
   const onSubmit = async e => {
     e.preventDefault();
-    login({ email, password });
+    login({ email, password, role: role.CUSTOMER  });
   };
 
   //Redirect if logged in
