@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import _ from 'lodash';
+toast.configure();
 const Alert = ({ alerts }) =>
-  alerts !== null &&
-  alerts.length > 0 &&
+  !_.isEmpty(alerts) &&
   alerts.map(alert => (
-    <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-      {alert.msg}
-    </div>
+        alert.alertType === 'danger' ? toast.error(alert.msg) : alert.alertType === 'success' && toast.success(alert.msg)
   ));
 
 Alert.propTypes = {

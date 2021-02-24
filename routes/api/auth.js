@@ -29,33 +29,34 @@ router.get('/', auth, async (req, res) => {
 router.post(
   '/',
   [
-    check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password is required').exists()
+    check('email', 'Không Được Để Trống Email').isEmail(),
+    check('password', 'Không Được Để Trống Mật Khẩu').exists().not().isEmpty()
   ],
   async (req, res) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-      return res.status(400).json({ error: error.array() });
+      return res.status(400).json({ errors: error.array() });
     }
 
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     try {
-      let user = await User.findOne({ email });
+      let user = await User.find({ email, role });
+      user = user[0];
       if (!user) {
-        res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+        res.status(400).json({ errors: [{ msg: 'Tài Khoản Không Tồn Tại' }] });
       }
       // See if user exists
-
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+        res.status(400).json({ errors: [{ msg: 'Mật Khẩu Không Chính Xác' }] });
       }
       const payload = {
         user: {
           id: user.id
         }
       };
+      console.log(payload);
 
       jwt.sign(
         payload,
@@ -63,13 +64,13 @@ router.post(
         { expiresIn: 36000 },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token, role: user.password });
         }
       );
       // Return jsonwebtoken
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server error');
+      res.status(500).json({ errors: [{ msg: 'Server error' }] });
     }
   }
 );
