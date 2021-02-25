@@ -1,5 +1,6 @@
 const express = require('express');
-const Profile = require('./../../models/Profile');
+// const Profile = require('./../../models/Profile');
+const Customer = require('../../models/Customer')
 const router = express.Router();
 const request = require('request');
 const config = require('config');
@@ -36,10 +37,10 @@ router.post(
   [
     auth,
     [
-      check('status', 'Status is required')
+      check('sex', 'sex is required')
         .not()
         .isEmpty(),
-      check('skills', 'Skills is required')
+      check('hobies', 'hobies is required')
         .not()
         .isEmpty()
     ]
@@ -53,32 +54,37 @@ router.post(
     }
 
     const {
-      company,
-      website,
-      location,
+      fromWhere,
       bio,
-      status,
-      githubusername,
-      skills,
+      sex,
+      dateOfBirth,
+      hobies,
       youtube,
       facebook,
       twitter,
       instagram,
-      linkedin
+      linkedin,
+      workedAt,
+      workerFrom,
+      workerTo,
+      avatar
     } = req.body;
-
     //Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
-    if (company) profileFields.company = company;
-    if (website) profileFields.website = website;
-    if (location) profileFields.location = location;
+    if (fromWhere) profileFields.fromWhere = fromWhere;
     if (bio) profileFields.bio = bio;
-    if (status) profileFields.status = status;
-    if (githubusername) profileFields.githubusername = githubusername;
-    if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim());
+    if (sex) profileFields.sex = sex;
+    if (dateOfBirth) profileFields.dateOfBirth = dateOfBirth;
+    if (hobies) {
+      profileFields.hobies = hobies.split(',').map(hobie => hobie.trim());
     }
+    if (avatar) {
+      profileFields.avatar = avatar;
+    } else {
+      profileFields.avatar = 'https://www.computerhope.com/jargon/g/guest-user.jpg';
+    }
+
 
     // build social object
     profileFields.social = {};
@@ -87,23 +93,30 @@ router.post(
     if (facebook) profileFields.social.facebook = facebook;
     if (linkedin) profileFields.social.linkedin = linkedin;
     if (instagram) profileFields.social.instagram = instagram;
+    // build workedAt object
+    profileFields.workedAt = {};
+    if (workedAt) profileFields.workedAt.where = workedAt;
+    if (workerFrom) profileFields.workedAt.from = workerFrom;
+    if (workerTo) profileFields.workedAt.to = workerTo;
 
     try {
-      let profile = await Profile.findOne({
+      let customer = await Customer.findOne({
         user: req.user.id
       });
       //create
 
-      if (!profile) {
-        profile = new Profile(profileFields);
+      if (!customer) {
+        profileFields.updateAt = new Date();
+        customer = new Customer(profileFields);
 
-        await profile.save();
-        res.json(profile);
+        await customer.save();
+        res.json(customer);
       }
 
       // update
-      if (profile) {
-        profile = await Profile.findOneAndUpdate(
+      if (customer) {
+        profileFields.updateAt = new Date();
+        customer = await Customer.findOneAndUpdate(
           {
             user: req.user.id
           },
@@ -119,7 +132,7 @@ router.post(
           }
         );
 
-        return res.json(profile);
+        return res.json(customer);
       }
 
       // create
@@ -408,11 +421,10 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
 router.get('/github/:username', (req, res) => {
   try {
     const options = {
-      url: `https://api.github.com/users/${
-        req.params.username
-      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
-        'githubClientId'
-      )}&client_secret=${config.get('githubSecret')}`,
+      url: `https://api.github.com/users/${req.params.username
+        }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+          'githubClientId'
+        )}&client_secret=${config.get('githubSecret')}`,
       method: 'GET',
       headers: {
         'User-Agent': 'node.js'
