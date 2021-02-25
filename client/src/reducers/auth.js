@@ -14,7 +14,7 @@ const initialState = {
   isAuthenticated: null,
   isConfirm: null,
   loading: true,
-  user: null
+  user: null,
 };
 
 export default function(state = initialState, action) {

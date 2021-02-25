@@ -34,7 +34,7 @@ router.post(
     check('social', 'social is invalid').optional(),
     check('bio', 'bio is invalid').optional(),
     check('phone', 'phone is invalid').not().isEmpty(),
-
+    check('confirm', 'confirm is invalid').not().isEmpty(),
   ],
   async (req, res) => {
     const error = validationResult(req);
@@ -42,7 +42,7 @@ router.post(
       return res.status(400).json({ errors: error.array() });
     }
     console.log(req.body);
-    const { name, email, password, role, location, sports, bio, social, website, phone } = req.body;
+    const { name, email, password, role, location, sports, bio, social, website, phone, confirm } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!_.isEmpty(user)) {
@@ -54,7 +54,8 @@ router.post(
         email,
         password,
         role,
-        phone
+        phone,
+        confirm
       });
 
       const salt = await bcrypt.genSalt(10);
