@@ -1,7 +1,6 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
-const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
 const Customer = require('../../models/Customer')
@@ -29,39 +28,35 @@ router.post(
       'Please enter a password with 6 or more character'
     ).isLength({ min: 6 }),
     check('role', 'role is invalid').not().isEmpty(),
-    check('location','location is invalid').optional(),
-    check('website','website is invalid').optional(),
-    check('sports','sports is invalid').optional(),
-    check('social','social is invalid').optional(),
-    check('bio','bio is invalid').optional(),
+    check('location', 'location is invalid').optional(),
+    check('website', 'website is invalid').optional(),
+    check('sports', 'sports is invalid').optional(),
+    check('social', 'social is invalid').optional(),
+    check('bio', 'bio is invalid').optional(),
+    check('phone', 'phone is invalid').not().isEmpty(),
+    check('confirm', 'confirm is invalid').not().isEmpty(),
   ],
   async (req, res) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({ errors: error.array() });
     }
-
-    const { name, email, password, role, location, sports, bio, social, website } = req.body;
+    console.log(req.body);
+    const { name, email, password, role, location, sports, bio, social, website, phone, confirm } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!_.isEmpty(user)) {
         return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
-      // See if user exists
-      const avatar = gravatar.url(email, {
-        s: '200',
-        r: 'pg',
-        d: 'mm'
-      });
 
       user = new User({
         name,
         email,
-        avatar,
         password,
-        role
+        role,
+        phone,
+        confirm
       });
-      // Get users gravatar
 
       const salt = await bcrypt.genSalt(10);
 
@@ -88,16 +83,16 @@ router.post(
       // Return jsonwebtoken
       switch (role) {
         case constant.role.CUSTOMER:
-          if(location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
+          if (location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
             customer = new Customer({
               user: user.id,
               location,
             })
-          await customer.save();
+            await customer.save();
           }
           break;
         case constant.role.CENTER:
-          if(location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
+          if (location?.longitude && location?.latitude && !_.isEmpty(location?.address)) {
             center = new Center({
               user: user.id,
               website,
@@ -107,13 +102,13 @@ router.post(
               social,
               status: constant.statusCenter.REGISTER,
             })
-          await center.save();
+            await center.save();
           }
           break;
         default:
           return res.status(400).json({ errors: [{ msg: 'role is not define' }] });
       }
-    } catch (err) { 
+    } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
     }

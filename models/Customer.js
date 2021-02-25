@@ -5,11 +5,58 @@ const CustomerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
+    sex: {
+        type: String,
+    },
+    dateOfBirth: {
+        type: String,
+    },
+    hobies: [
+        {
+            type: String,
+        }
+    ],
+    avatar: {
+        type: String
+      },
+    fromWhere: {
+        type: String
+    },
+    workedAt: [
+        {
+            where: {
+                type: String
+            },
+            from: {
+                type: String
+            },
+            to: {
+                type: String
+            }
+        }
+    ],
+    social: {
+        youtube: {
+            type: String
+        },
+        twitter: {
+            type: String
+        },
+        facebook: {
+            type: String
+        },
+        instagram: {
+            type: String
+        }
+    },
     history: [
         {
             centerId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'center'
+            },
+            kindOfSport: {
+                type: String
             },
             from: {
                 type: Date
@@ -17,8 +64,14 @@ const CustomerSchema = new mongoose.Schema({
             to: {
                 type: Date
             },
+            status: {
+                type: String
+            }
         }
     ],
+    bio: {
+        type: String
+      },
     location: {
         longitude: {
             type: String
