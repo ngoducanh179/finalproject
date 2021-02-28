@@ -8,17 +8,27 @@ const User = require('./../../models/User');
 const { check, validationResult } = require('express-validator');
 const auth = require('./../../middleware/auth');
 const Post = require('./../../models/Post');
-router.get('/me', auth, async (req, res) => {
+const { role, statusCustomer } = require('../../config/constant');
+ router.get('/me', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({
-      user: req.user.id
-    }).populate('user', ['name', 'avatar']);
+    let profile
+    if(req.role === role.CUSTOMER) {
+       profile = await Customer.findOne({
+        user: req.user.id
+      }).populate('user', ['name', 'email', 'phone']);
+    } else {
+       profile = await Customer.findOne({
+        user: req.user.id
+      })
+    }
+
 
     if (!profile) {
       return res.status(400).json({
         msg: 'There is no profile for this user'
       });
     }
+    console.log(profile);
     return res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
@@ -95,6 +105,7 @@ router.post(
     if (instagram) profileFields.social.instagram = instagram;
     // build workedAt object
     profileFields.workedAt = {};
+    profileFields.status = statusCustomer.PROFILED;
     if (workedAt) profileFields.workedAt.where = workedAt;
     if (workerFrom) profileFields.workedAt.from = workerFrom;
     if (workerTo) profileFields.workedAt.to = workerTo;

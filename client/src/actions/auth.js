@@ -15,8 +15,8 @@ import { role } from '../constans/constans'
 //Load User
 import setAuthToken from '../utils/setAuthToken';
 export const loadUser = () => async dispatch => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
+  if (localStorage.token && localStorage.role) {
+    setAuthToken(localStorage.token, localStorage.role);
   }
   try {
     const res = await axios.get('/api/auth');
@@ -69,6 +69,7 @@ export const login = ({ email, password, role }) => async dispatch => {
   const body = JSON.stringify({ email, password, role });
   try {
     const res = await axios.post('/api/auth', body, config);
+    console.log(222,res);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data

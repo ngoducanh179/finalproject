@@ -8,7 +8,8 @@ const Center = require('../../models/Center')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const _ = require('lodash')
-const constant = require('../../config/constant')
+const constant = require('../../config/constant');
+const removeVietnameseTones = require('../../config/vnToEn')
 //@route    POST api/users
 
 // @desc    Test route
@@ -49,13 +50,21 @@ router.post(
         return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
       }
 
+      let userPhone = await User.findOne({ phone });
+      if (!_.isEmpty(userPhone)) {
+        return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+      }
+      const search = removeVietnameseTones(name);
+
+
       user = new User({
         name,
         email,
         password,
         role,
         phone,
-        confirm
+        confirm,
+        search
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -87,6 +96,7 @@ router.post(
             customer = new Customer({
               user: user.id,
               location,
+              status: constant.REGISTER
             })
             await customer.save();
           }
