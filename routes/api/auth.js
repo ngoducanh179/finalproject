@@ -42,6 +42,7 @@ router.post(
     try {
       let user = await User.find({ email, role });
       user = user[0];
+      console.log(user);
       if (!user) {
         res.status(400).json({ errors: [{ msg: 'Tài Khoản Không Tồn Tại' }] });
       }
@@ -56,15 +57,13 @@ router.post(
           id: user.id
         }
       };
-      console.log(payload);
-
       jwt.sign(
         payload,
         config.get('jwtSecret'),
         { expiresIn: 36000 },
         (err, token) => {
           if (err) throw err;
-          res.json({ token, role: user.password });
+          res.json({ token, role: user.role });
         }
       );
       // Return jsonwebtoken

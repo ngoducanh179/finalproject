@@ -1,16 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
-// import Navbar from './components/layout/Navbar';
 import Header from './componentss/layout/Header';
 import Footer from './componentss/layout/Footer';
-
-// import Landing from './components/layout/Landing';
 import Home from './views/Home'
 import LoginCustomer from './components/auth/LoginCustomer';
 import LoginCenter from './components/auth/LoginCenter';
-
 import RegisterCustomer from './components/auth/RegisterCustomer';
-
-import './App.css';
 import Alert from './components/layout/Alert';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // Redux
@@ -28,9 +22,10 @@ import Profiles from './components/profile/Profiles';
 import Profile from './components/profileid/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
+import './App.css';
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
+if (localStorage.token && localStorage.role) {
+  setAuthToken(localStorage.token, localStorage.role);
 }
 const App = () => {
   useEffect(() => {
@@ -41,9 +36,7 @@ const App = () => {
       <div className='App'>
         <Router>
           <Fragment>
-            {/* <Navbar /> */}
             <Header navPosition="right" className="reveal-from-bottom"/>
-            {/* <Route exact path='/' component={Landing} /> */}
             <main className="site-content">
             <Route exact path='/' component={Home} />
             </main>

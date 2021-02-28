@@ -83,6 +83,9 @@ const CustomerSchema = new mongoose.Schema({
             type: String
         }
     },
+    status: {
+        type: String
+    },
     createAt: {
         type: Date,
         default: Date.now

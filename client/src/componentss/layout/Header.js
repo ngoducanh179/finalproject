@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import Logo from './partials/Logo';
-
+import { connect } from 'react-redux';
+// import { role } from '../../constans/constans'
 const propTypes = {
   navPosition: PropTypes.string,
   hideNav: PropTypes.bool,
@@ -27,6 +28,7 @@ const Header = ({
   hideSignin,
   bottomOuterDivider,
   bottomDivider,
+  auth: { isAuthenticated, role },
   ...props
 }) => {
 
@@ -44,7 +46,7 @@ const Header = ({
       document.removeEventListener('click', clickOutside);
       closeMenu();
     };
-  });  
+  });
 
   const openMenu = () => {
     document.body.classList.add('off-nav-is-active');
@@ -66,7 +68,7 @@ const Header = ({
     if (!nav.current) return
     if (!isActive || nav.current.contains(e.target) || e.target === hamburger.current) return;
     closeMenu();
-  }  
+  }
 
   const classes = classNames(
     'site-header',
@@ -112,15 +114,47 @@ const Header = ({
                       navPosition && `header-nav-${navPosition}`
                     )}>
                     <li>
-                      <Link to="/login/center" onClick={closeMenu}>Trở thành Chủ phòng Gym</Link>
+                      {
+                        !isAuthenticated &&
+                        <Link to="/login/center" onClick={closeMenu}>Trở thành Chủ phòng Gym</Link>
+                      }
                     </li>
                   </ul>
+
+                  
                   {!hideSignin &&
                     <ul
-                      className="list-reset header-nav-right"
+                      className="list-reset header-nav-left"
                     >
                       <li>
-                        <Link to="/login/customer" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Đăng Nhập</Link>
+                        {
+                          !isAuthenticated && 
+                          <Link to="/login/customer" className="button button-primary button-wide-mobile button-sm" onClick={closeMenu}>Đăng Nhập</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/" onClick={closeMenu}><strong>Trang Chủ</strong></Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={closeMenu}>Cộng Đồng</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={closeMenu}>Người Tập</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={closeMenu}>Trang Cá Nhân</Link>
+                        }
                       </li>
                     </ul>}
                 </div>
@@ -134,5 +168,10 @@ const Header = ({
 
 Header.propTypes = propTypes;
 Header.defaultProps = defaultProps;
-
-export default Header;
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
+// export default Header;
+export default connect(mapStateToProps, null)(
+  Header
+);

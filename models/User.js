@@ -10,6 +10,9 @@ const UserSchema = new mongoose.Schema({
     require: true,
     unique: true
   },
+  search: {
+    type: String
+  },
   phone: {
     type: String,
     unique: true

@@ -4,7 +4,8 @@ module.exports = {
         ADMIN: 'admin',
         CENTER: 'center'
     },
-    statusCenter: {
-        REGISTER: 'register'
+    statusCustomer: {
+        REGISTERED: 'registered',
+        PROFILED: 'profiled'
     }
 }
