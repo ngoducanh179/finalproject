@@ -147,7 +147,7 @@ const Header = ({
                       <li>
                         {
                           isAuthenticated && role === 'customer' &&
-                          <Link to="/login/customer" onClick={closeMenu}>Người Tập</Link>
+                          <Link to="/profiles" onClick={closeMenu}>Tomfiter</Link>
                         }
                       </li>
                       <li>

@@ -64,7 +64,6 @@ router.post(
         role,
         phone,
         confirm,
-        search
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -96,7 +95,8 @@ router.post(
             customer = new Customer({
               user: user.id,
               location,
-              status: constant.REGISTER
+              status: constant.REGISTER,
+              search
             })
             await customer.save();
           }

@@ -15,6 +15,7 @@ const Profile = ({
   auth,
   match
 }) => {
+  console.log(profileid);
   useEffect(() => {
     getProfilesById(match.params.id);
   }, [getProfilesById, match.params.id]);
@@ -25,13 +26,13 @@ const Profile = ({
       ) : (
         <Fragment>
           <Link to='/profiles' className='btn btn-light'>
-            Back To Profiles
+            Trở Về
           </Link>
           {auth.isAuthenticated &&
             auth.loading === false &&
             auth.user._id === profileid.user._id && (
               <Link to='/edit-profile' className='btn btn-dark'>
-                Edit Profile
+                Sửa Thông Tin
               </Link>
             )}
           <div className='profile-grid my-1'>
@@ -39,7 +40,7 @@ const Profile = ({
             <ProfileAbout profileid={profileid} />
             <div className='profile-exp bg-white p-2'>
               <h2 className='text-primary'>Experience</h2>
-              {profileid.experience.length > 0 ? (
+              {profileid.experience.length ? (
                 <Fragment>
                   {profileid.experience.map(experience => (
                     <ProfileExperience
@@ -55,7 +56,7 @@ const Profile = ({
 
             <div className='profile-edu bg-white p-2'>
               <h2 className='text-primary'>Education</h2>
-              {profileid.education.length > 0 ? (
+              {profileid.education.length ? (
                 <Fragment>
                   {profileid.education.map(education => (
                     <ProfileEducation
