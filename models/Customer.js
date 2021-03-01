@@ -22,6 +22,10 @@ const CustomerSchema = new mongoose.Schema({
     fromWhere: {
         type: String
     },
+    search: {
+        type: String,
+        text: true
+    },
     workedAt: [
         {
             where: {
@@ -97,3 +101,4 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 module.exports = Customer = mongoose.model('customer', CustomerSchema);
+
