@@ -107,7 +107,6 @@ export const createProfile = (
       history.push('/dashboard');
     }
   } catch (err) {
-    console.log(err.response);
     const errors = err.response.data.errors;
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));

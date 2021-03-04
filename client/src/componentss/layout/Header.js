@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import Logo from './partials/Logo';
 import { connect } from 'react-redux';
-// import { role } from '../../constans/constans'
+import { logout } from '../../actions/auth';
 const propTypes = {
   navPosition: PropTypes.string,
   hideNav: PropTypes.bool,
@@ -28,7 +28,8 @@ const Header = ({
   hideSignin,
   bottomOuterDivider,
   bottomDivider,
-  auth: { isAuthenticated, role },
+  auth: { isAuthenticated, role, user },
+  logout,
   ...props
 }) => {
 
@@ -54,10 +55,14 @@ const Header = ({
     setIsactive(true);
   }
 
-  const closeMenu = () => {
+  const closeMenu = () => { 
     document.body.classList.remove('off-nav-is-active');
     nav.current && (nav.current.style.maxHeight = null);
     setIsactive(false);
+  }
+  const onClick = () => {
+    closeMenu();
+    logout();
   }
 
   const keyPress = (e) => {
@@ -141,7 +146,7 @@ const Header = ({
                       <li>
                         {
                           isAuthenticated && role === 'customer' &&
-                          <Link to="/login/customer" onClick={closeMenu}>Cộng Đồng</Link>
+                          <Link to="/posts" onClick={closeMenu}>Cộng Đồng</Link>
                         }
                       </li>
                       <li>
@@ -150,10 +155,23 @@ const Header = ({
                           <Link to="/profiles" onClick={closeMenu}>Tomfiter</Link>
                         }
                       </li>
+                      
                       <li>
                         {
                           isAuthenticated && role === 'customer' &&
-                          <Link to="/login/customer" onClick={closeMenu}>Trang Cá Nhân</Link>
+                          <Link to="/login/customer" onClick={closeMenu}> Phòng Tập</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={closeMenu}><i class="fas fa-user"></i> {user && user.name}</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={onClick} ><i class="fas fa-sign-out-alt"></i> Logout</Link>
                         }
                       </li>
                     </ul>}
@@ -171,7 +189,8 @@ Header.defaultProps = defaultProps;
 const mapStateToProps = state => ({
   auth: state.auth,
 });
+
 // export default Header;
-export default connect(mapStateToProps, null)(
+export default connect(mapStateToProps, { logout })(
   Header
 );

@@ -29,7 +29,6 @@ const _ = require( 'lodash');
         msg: 'There is no profile for this user'
       });
     }
-    console.log(profile);
     return res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
@@ -294,11 +293,9 @@ router.put(
     };
 
     try {
-      // console.log(req.user.id);
       const profile = await Profile.findOne({
         user: req.user.id
       });
-      // console.log(profile);
       profile.experience.unshift(newExp);
       await profile.save();
       res.json(profile);
@@ -393,7 +390,6 @@ router.put(
       const profile = await Profile.findOne({
         user: req.user.id
       });
-      // console.log(profile.education);
       profile.education.unshift(newEdu);
       await profile.save();
       res.json(profile);

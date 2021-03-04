@@ -1,26 +1,24 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 const ProfileEducation = ({
-  education: { school, degree, fieldofstudy, from, to, current, description }
+  his: { kindOfSport, from, to, status }
 }) => {
   return (
-    <div>
-      <h3 className='text-dark'>{school}</h3>
-      <p>
-        <Moment format='YYYY/MM/DD'>{from}</Moment> -{' '}
-        {!to ? 'Now' : <Moment format='YYYY/MM/DD'>{to}</Moment>}
-      </p>
-      <p>
-        <strong>Degree: </strong> {degree}
-      </p>
-      <p>
-        <strong>Field Of study: </strong> {fieldofstudy}
-      </p>
-      <p>
-        <strong>Description: </strong> {description}
-      </p>
-    </div>
+    <Fragment>
+      { kindOfSport &&
+        <div>
+        <h3 className='text-dark'>{kindOfSport}</h3>
+        <p>
+          <Moment format='YYYY/MM/DD'>{from}</Moment> -{' '}
+          {!to ? 'Now' : <Moment format='YYYY/MM/DD'>{to}</Moment>}
+        </p>
+        <p>
+          <strong>Trạng Thái: </strong> {status}
+        </p>
+      </div>
+      }
+    </Fragment>
   );
 };
 

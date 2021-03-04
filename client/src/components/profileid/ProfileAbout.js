@@ -4,25 +4,25 @@ import PropTypes from 'prop-types';
 const ProfileAbout = ({
   profileid: {
     bio,
-    skills,
-    user: { name }
+    user: { name },
+    hobies
   }
 }) => {
   return (
-    <div class='profile-about bg-light p-2'>
+    <div class='profile-about p-2'>
       {bio && (
         <Fragment>
-          <h2 class='text-primary'>{name}'s Bio</h2>
+          <h2 class='text-primary'>Giới Thiệu Của {name}</h2>
           <p>{bio}</p>
           <div class='line'></div>
         </Fragment>
       )}
 
-      <h2 class='text-primary'>Skill Set</h2>
+      <h2 class='text-primary'>Sở Thích</h2>
       <div class='skills'>
-        {skills.map((skill, index) => (
+        {hobies.map((hoby, index) => (
           <div key={index} className='p-1'>
-            <i className='fas fa-check'></i> {skill}
+            <i className='fas fa-check'></i> {hoby}
           </div>
         ))}
       </div>
