@@ -3,6 +3,11 @@ const role = {
     ADMIN: 'admin',
     CENTER: 'center'
 }
+const statusCustomer = {
+    REGISTERED: 'registered',
+    FROFILED: 'profiled',
+}
 export {
-    role
+    role,
+    statusCustomer
 };

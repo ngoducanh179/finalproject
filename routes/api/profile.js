@@ -8,11 +8,21 @@ const User = require('./../../models/User');
 const { check, validationResult } = require('express-validator');
 const auth = require('./../../middleware/auth');
 const Post = require('./../../models/Post');
-router.get('/me', auth, async (req, res) => {
+const { role, statusCustomer } = require('../../config/constant');
+const _ = require( 'lodash');
+ router.get('/me', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({
-      user: req.user.id
-    }).populate('user', ['name', 'avatar']);
+    let profile
+    if(req.role === role.CUSTOMER) {
+       profile = await Customer.findOne({
+        user: req.user.id
+      }).populate('user', ['name', 'email', 'phone']);
+    } else {
+       profile = await Customer.findOne({
+        user: req.user.id
+      })
+    }
+
 
     if (!profile) {
       return res.status(400).json({
@@ -95,6 +105,7 @@ router.post(
     if (instagram) profileFields.social.instagram = instagram;
     // build workedAt object
     profileFields.workedAt = {};
+    profileFields.status = statusCustomer.PROFILED;
     if (workedAt) profileFields.workedAt.where = workedAt;
     if (workerFrom) profileFields.workedAt.from = workerFrom;
     if (workerTo) profileFields.workedAt.to = workerTo;
@@ -151,7 +162,14 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    let profiles;
+    const textSearch = req.query.query
+    if(!_.isEmpty(textSearch)) {
+      profiles = await Customer.find({$text: {$search: textSearch}}).populate('user', ['name', 'email']);
+    } else {
+      profiles = await Customer.find().populate('user', ['name', 'email'])
+    }
+    totalCount = await Customer.countDocuments()
     res.json(profiles);
   } catch (e) {
     console.error(e.message);
@@ -169,9 +187,9 @@ router.get('/', async (req, res) => {
 
 router.get('/user/:user_id', async (req, res) => {
   try {
-    const profile = await Profile.findOne({
+    const profile = await Customer.findOne({
       user: req.params.user_id
-    }).populate('user', ['name', 'avatar']);
+    }).populate('user', ['name', 'email']);
 
     if (!profile)
       return res.status(400).json({
@@ -275,11 +293,9 @@ router.put(
     };
 
     try {
-      // console.log(req.user.id);
       const profile = await Profile.findOne({
         user: req.user.id
       });
-      // console.log(profile);
       profile.experience.unshift(newExp);
       await profile.save();
       res.json(profile);
@@ -374,7 +390,6 @@ router.put(
       const profile = await Profile.findOne({
         user: req.user.id
       });
-      // console.log(profile.education);
       profile.education.unshift(newEdu);
       await profile.save();
       res.json(profile);

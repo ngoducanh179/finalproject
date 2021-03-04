@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { GoogleComponent } from 'react-google-location'
-import { Link, Redirect } from 'react-router-dom';
+// import { GoogleComponent } from 'react-google-location'
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import axios from 'axios';
+// import axios from 'axios';
 import { setAlert } from './../../actions/alert';
 import { registerCustomer } from './../../actions/auth';
 import PropTypes from 'prop-types';
-import firebase from '../../assets/firebase/firebase'
+import firebase from "../../assets/firebase/firebase";
+import 'firebase/auth';
 
 const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
   var pattern = new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g);
@@ -20,10 +21,12 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
       longitude: '',
       address: ''
     },
-    phone: ''
+    phone: '',
   });
-  const [otp, setOtp] = useState('');
-  const [openModal, setOpenModal] = useState(false)
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [openModal, setOpenModal] = useState(false);
+  const [confirmSms, setConfirmSms] = useState(null);
+
   // const API_KEY = 'e0aaf1f2dd2eb3c3335d003ddf08e90b'
   const { name, email, password, password2, location, phone } = formData;
   const onChange = e => {
@@ -54,7 +57,28 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
     }
   };
 
+  const handleChange = (element, index) => {
+    if (isNaN(element.value)) return false;
 
+    setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
+
+    //Focus next input
+    if (element.nextSibling) {
+      element.nextSibling.focus();
+    }
+  };
+  const confirmOTP = async code => {
+    try {
+      const confirmInfo = await confirmSms.confirm(code);
+      if(confirmInfo && confirmInfo.user && confirmInfo.user.phoneNumber) {
+        registerCustomer({ name, email, password, location, phone, confirm: true });
+      } else {
+        setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
+      }
+    } catch (error) {
+      setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
+    }
+  }
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
@@ -62,28 +86,14 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
     } else if (!pattern.test(phone)) {
       setAlert('Số Điện Thoại Không Hợp Lệ', 'danger');
     } else {
-      setOpenModal(true)
-      // const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
-      // firebase.auth().signInWithPhoneNumber(number, recaptcha).then(function (e) {
-
-      //   e.confirm(code).then(function (result) {
-      //     console.log(result.user);
-
-      //     document.querySelector('label').textContent += result.user.phoneNumber + "Number verified";
-
-      //   }).catch(function (error) {
-      //     console.error(error);
-
-      //   });
-
-      // })
-      //   .catch(function (error) {
-      //     console.error(error);
-
-      //   });
-      // registerCustomer({ name, email, password, location, phone });
-
-
+      let phoneplus = phone.substring(1);
+      phoneplus = '+84' + phoneplus;
+      const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
+      if (recaptcha) {
+        const confirmation = await new firebase.auth().signInWithPhoneNumber(phoneplus, recaptcha)
+        setConfirmSms(confirmation)
+        if (confirmation) setOpenModal(true)
+      }
     }
   };
   if (isAuthenticated) {
@@ -93,7 +103,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
   return (
     <Fragment>
       {
-        openModal ? (
+        !openModal ? (
           <Fragment>
             <br />
             <h1 className='text-primary'>Tạo Tài Khoản Cùng TomFit</h1>
@@ -158,6 +168,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
                 />
               </div>
               <br />
+              <div id="recaptcha"></div>
               <input type='submit' className='btn button-primary' value='Đăng Kí' />
             </form>
             <p className='my-1'>
@@ -167,17 +178,13 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
         ) : (
             <div>
               <>
-                {/* <Header title="Building OTP box using Hooks" /> */}
-
-                {/* <ExternalInfo page="otpBox" /> */}
-
                 <div className="row">
                   <div className="col text-center">
                     <br />
-                    <h1 className='text-primary'>Hãy Nhập Mã OTP Đã Đc Gửi Về SĐT Của Bạn</h1>
+                    <h1 className='text-primary'>Hãy Nhập Mã OTP Đã Được Gửi Về SĐT Của Bạn</h1>
                     <p>Enter the OTP sent to you to verify your identity</p>
 
-                    {/* {otp.map((data, index) => {
+                    {otp.map((data, index) => {
                       return (
                         <input
                           className="otp-field"
@@ -186,25 +193,28 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
                           maxLength="1"
                           key={index}
                           value={data}
-                          // onChange={e => handleChange(e.target, index)}
+                          onChange={e => handleChange(e.target, index)}
                           onFocus={e => e.target.select()}
                         />
                       );
-                    })} */}
+                    })}
 
-                    {/* <p>OTP Entered - {otp.join("")}</p> */}
+                    <p>OTP Entered - {otp.join("")}</p>
+                    <br />
+                    <br />
+
                     <p>
                       <button
                         className="btn button-secondary mr-2"
-                      // onClick={e => setOtp([...otp.map(v => "")])}
+                        onClick={e => setOtp([...otp.map(v => "")])}
                       >
                         Clear
                         </button>
                       <button
                         className="btn button-primary"
-                      // onClick={e =>
-                      //   alert("Entered OTP is " + otp.join(""))
-                      // }
+                        onClick={e =>
+                          confirmOTP(otp.join(""))
+                        }
                       >
                         Verify OTP
                         </button>

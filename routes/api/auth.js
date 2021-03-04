@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcryptjs');
+const Customer = require('./../../models/Customer')
 //@route    GET api/auth
 
 // @desc    Test route
@@ -13,7 +14,17 @@ const bcrypt = require('bcryptjs');
 // @access  Public
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    let user = await User.findById(req.user.id).select('-password')
+    if (user) {
+      const customer = await Customer.findOne({ user: user.id });
+      if (customer && customer.avatar) {
+        if (user._doc) {
+          user = { ...user._doc, avatar: customer.avatar };
+        } else {
+          user = { ...user, avatar: customer.avatar };
+        }
+      }
+    }
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -47,7 +58,6 @@ router.post(
       }
       // See if user exists
       const isMatch = await bcrypt.compare(password, user.password);
-
       if (!isMatch) {
         res.status(400).json({ errors: [{ msg: 'Mật Khẩu Không Chính Xác' }] });
       }
@@ -56,15 +66,13 @@ router.post(
           id: user.id
         }
       };
-      console.log(payload);
-
       jwt.sign(
         payload,
         config.get('jwtSecret'),
         { expiresIn: 36000 },
         (err, token) => {
           if (err) throw err;
-          res.json({ token, role: user.password });
+          res.json({ token, role: user.role });
         }
       );
       // Return jsonwebtoken

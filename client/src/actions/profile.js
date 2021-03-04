@@ -32,10 +32,10 @@ export const getCurrentProfile = () => async dispatch => {
 };
 
 //Get all profiles
-export const getProfiles = () => async dispatch => {
+export const getProfiles = (query = '') => async dispatch => {
   dispatch({ type: CLEAR_PROFILES });
   try {
-    const res = await axios.get('/api/profile');
+    const res = await axios.get(`/api/profile/?query=${query}`);
 
     dispatch({
       type: GET_PROFILES,
@@ -54,7 +54,7 @@ export const getProfilesById = userId => async dispatch => {
   try {
     const res = await axios.get(`/api/profile/user/${userId}`);
 
-    dispatch({
+    dispatch({ 
       type: GET_PROFILEID,
       payload: res.data
     });
@@ -107,7 +107,6 @@ export const createProfile = (
       history.push('/dashboard');
     }
   } catch (err) {
-    console.log(err.response);
     const errors = err.response.data.errors;
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));

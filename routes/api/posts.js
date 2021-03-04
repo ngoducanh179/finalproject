@@ -4,7 +4,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('./../../models/User');
 const Post = require('./../../models/Post');
-
+const { role } = require('../../config/constant');
 //@route    GET api/posts
 
 // @desc    Test route
@@ -28,12 +28,15 @@ router.post(
 
     try {
       const user = await User.findById(req.user.id).select('-password');
-
+      if (req.role === role.CUSTOMER && user) {
+        customer = await Customer.findOne({ user: user.id});
+     }
       const newPost = new Post({
         text: req.body.text,
         name: user.name,
-        avatar: user.avatar,
-        user: req.user.id
+        avatar: customer.avatar,
+        user: req.user.id,
+        img: req.body.url || ''
       });
 
       const post = await newPost.save();
@@ -54,7 +57,7 @@ router.post(
 router.get('/', auth, async (req, res) => {
   try {
     const posts = await Post.find().sort({ date: -1 });
-    // console.log(posts);
+    console.log(posts);
     res.json(posts);
   } catch (e) {
     console.error(e.message);
@@ -127,7 +130,7 @@ router.put('/like/:id', auth, async (req, res) => {
     if (
       post.likes.filter(like => like.user.toString() === req.user.id).length > 0
     ) {
-      return res.status(400).json({ msg: 'Post already liked' });
+      return res.json({ msg: 'Post already liked', code:'liked' });
     }
 
     post.likes.unshift({ user: req.user.id });
@@ -158,7 +161,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
       post.likes.filter(like => like.user.toString() === req.user.id).length ===
       0
     ) {
-      return res.status(400).json({ msg: 'Post has not yet been liked' });
+      return res.json({ msg: 'Post has not yet been liked' });
     }
 
     const removeIndex = post.likes
@@ -200,14 +203,19 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
       const post = await Post.findById(req.params.id);
-
+      let customer
+      if (user) {
+         customer = await Customer.findOne({ user: user.id });
+      }
       const newComment = new Post({
         text: req.body.text,
         name: user.name,
-        avatar: user.avatar,
-        user: req.user.id
+        avatar: customer.avatar || '',
+        user: req.user.id,
+        img: req.user.img
       });
       post.comments.unshift(newComment);
+      console.log(post);
       await post.save();
       res.json(post.comments);
     } catch (e) {

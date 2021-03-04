@@ -24,53 +24,58 @@ const Profile = ({
         <Spinner />
       ) : (
         <Fragment>
-          <Link to='/profiles' className='btn btn-light'>
-            Back To Profiles
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+
+          <Link to='/profiles' className='btn button-primary'>
+            Trở Về
           </Link>
           {auth.isAuthenticated &&
             auth.loading === false &&
             auth.user._id === profileid.user._id && (
               <Link to='/edit-profile' className='btn btn-dark'>
-                Edit Profile
+                Sửa Thông Tin
               </Link>
             )}
           <div className='profile-grid my-1'>
             <ProfileTop profileid={profileid} />
             <ProfileAbout profileid={profileid} />
-            <div className='profile-exp bg-white p-2'>
-              <h2 className='text-primary'>Experience</h2>
-              {profileid.experience.length > 0 ? (
+            <div className='profile-exp p-2'>
+              <h2 className='text-primary'>Đã Từng Làm Việc Tại</h2>
+              {profileid.workedAt.length ? (
                 <Fragment>
-                  {profileid.experience.map(experience => (
+                  {profileid.workedAt.map((work, index) => (
                     <ProfileExperience
-                      key={experience._id}
-                      experience={experience}
+                      key={index}
+                      work={work}
                     />
                   ))}
                 </Fragment>
               ) : (
-                <h4>No experience credentials</h4>
+                <h4>Không Tìm Thấy ...</h4>
               )}
             </div>
 
-            <div className='profile-edu bg-white p-2'>
-              <h2 className='text-primary'>Education</h2>
-              {profileid.education.length > 0 ? (
+            <div className='profile-edu p-2'>
+              <h2 className='text-primary'>Lịch Sử Tập Luyện</h2>
+              {profileid.history.length ? (
                 <Fragment>
-                  {profileid.education.map(education => (
+                  {profileid.history.map((his, index) => (
                     <ProfileEducation
-                      key={education._id}
-                      education={education}
+                      key={index}
+                      his={his}
                     />
                   ))}
                 </Fragment>
               ) : (
-                <h4>No education credentials</h4>
+                <h4>Không Tìm Thấy ...</h4>
               )}
             </div>
-            {profileid.githubusername && (
+            {/* {profileid.githubusername && (
               <ProfileGithub username={profileid.githubusername} />
-            )}
+            )} */}
           </div>
         </Fragment>
       )}

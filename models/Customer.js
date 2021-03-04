@@ -22,6 +22,10 @@ const CustomerSchema = new mongoose.Schema({
     fromWhere: {
         type: String
     },
+    search: {
+        type: String,
+        text: true
+    },
     workedAt: [
         {
             where: {
@@ -83,6 +87,9 @@ const CustomerSchema = new mongoose.Schema({
             type: String
         }
     },
+    status: {
+        type: String
+    },
     createAt: {
         type: Date,
         default: Date.now
@@ -94,3 +101,4 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 module.exports = Customer = mongoose.model('customer', CustomerSchema);
+
