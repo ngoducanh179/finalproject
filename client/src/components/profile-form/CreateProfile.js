@@ -85,7 +85,6 @@ const CreateProfile = ({ createProfile, history }) => {
     if (name) {
       setFormData({ ...formData, [name]: e });
     } else {
-      console.log(formData);
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 

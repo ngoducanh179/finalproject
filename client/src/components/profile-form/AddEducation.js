@@ -39,7 +39,6 @@ const AddEducaction = ({ addEducation, history }) => {
         onSubmit={e => {
           e.preventDefault();
           addEducation(formData, history);
-          console.log(formData);
         }}
       >
         <div class='form-group'>
