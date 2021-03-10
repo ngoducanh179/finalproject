@@ -215,7 +215,6 @@ router.post(
         img: req.user.img
       });
       post.comments.unshift(newComment);
-      console.log(post);
       await post.save();
       res.json(post.comments);
     } catch (e) {

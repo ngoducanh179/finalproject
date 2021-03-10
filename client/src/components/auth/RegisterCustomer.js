@@ -8,8 +8,9 @@ import { registerCustomer } from './../../actions/auth';
 import PropTypes from 'prop-types';
 import firebase from "../../assets/firebase/firebase";
 import 'firebase/auth';
+import { role } from '../../constans/constans'
 
-const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
+const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth }) => {
   var pattern = new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g);
   const [formData, setFormData] = useState({
     name: '',
@@ -96,8 +97,10 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
       }
     }
   };
-  if (isAuthenticated) {
+  if (isAuthenticated && auth.role === role.CUSTOMER) {
     return <Redirect to='/dashboard' />;
+  } else if (isAuthenticated && auth.role === role.CENTER) {
+    return <Redirect to='/dashboard/center' />;
   }
 
   return (
@@ -236,7 +239,8 @@ RegisterCustomer.propTypes = {
   isAuthenticated: PropTypes.bool
 };
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { setAlert, registerCustomer })(RegisterCustomer);

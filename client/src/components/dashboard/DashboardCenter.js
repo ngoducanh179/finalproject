@@ -3,26 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrentProfile, deleteAccount } from './../../actions/profile';
 import Spinner from './../layout/Spinner';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { statusCustomer, role } from '../../constans/constans'
-import { setAlert } from '../../actions/alert'
-
-const Dashboard = ({
+import { statusCustomer } from '../../constans/constans'
+const DashboardCenter = ({
   getCurrentProfile,
   deleteAccount,
   auth: { user },
-  auth,
   profile: { profile, loading }
 }) => {
   useEffect(() => {
     getCurrentProfile();
     // eslint-disable-next-line
   }, [getCurrentProfile]);
-  if (auth.isAuthenticated && auth.role === role.CENTER) {
-    setAlert('permission denied', 'danger')
-    return <Redirect to='/dashboard/center' />;
-  }
   return loading && profile === null ? (
     <Spinner />
   ) : (
@@ -214,7 +207,7 @@ const Dashboard = ({
                 <i className='fas fa-user'></i> Chào Mừng {user && user.name}
               </p>
               <p>Bạn Chưa Setup Profile Của Bạn, Hãy Thêm Một Số Thông Tin Nhé</p>
-              <Link to='/create-profile' className='button button-primary my-1'>
+              <Link to='/create-profile/center' className='button button-primary my-1'>
                 Tạo Profile Của Bạn
           </Link>
             </Fragment>
@@ -223,7 +216,7 @@ const Dashboard = ({
     );
 };
 
-Dashboard.propTypes = {
+DashboardCenter.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
@@ -236,5 +229,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(
-  Dashboard
+    DashboardCenter
 );

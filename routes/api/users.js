@@ -94,7 +94,7 @@ router.post(
             customer = new Customer({
               user: user.id,
               location,
-              status: constant.REGISTER,
+              status: constant.statusCustomer.REGISTERED,
               search
             })
             await customer.save();
@@ -109,7 +109,8 @@ router.post(
               location,
               bio,
               social,
-              status: constant.statusCenter.REGISTER,
+              status: constant.statusCustomer.REGISTERED,
+              search,
             })
             await center.save();
           }
