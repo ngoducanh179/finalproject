@@ -4,7 +4,8 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('./../../models/User');
 const Post = require('./../../models/Post');
-const { role } = require('../../config/constant');
+const { role, statusCustomer } = require('../../config/constant');
+const Center = require('../../models/Center')
 //@route    GET api/posts
 
 // @desc    Test route
@@ -28,13 +29,29 @@ router.post(
 
     try {
       const user = await User.findById(req.user.id).select('-password');
-      if (req.role === role.CUSTOMER && user) {
-        customer = await Customer.findOne({ user: user.id});
-     }
+      let customer;
+      let center;
+      let avatar
+      if (user) {
+        switch (user.role) {
+          case role.CUSTOMER:
+            customer = await Customer.findOne({ user: user.id });
+            avatar = customer.avatar;
+            break;
+          case role.CENTER:
+            center = await Center.findOne({ user: user.id });
+            avatar = center.avatar
+            break;
+          default:
+            break;
+        }
+
+      }
+
       const newPost = new Post({
         text: req.body.text,
         name: user.name,
-        avatar: customer.avatar,
+        avatar,
         user: req.user.id,
         img: req.body.url || ''
       });
@@ -130,7 +147,7 @@ router.put('/like/:id', auth, async (req, res) => {
     if (
       post.likes.filter(like => like.user.toString() === req.user.id).length > 0
     ) {
-      return res.json({ msg: 'Post already liked', code:'liked' });
+      return res.json({ msg: 'Post already liked', code: 'liked' });
     }
 
     post.likes.unshift({ user: req.user.id });
@@ -203,14 +220,28 @@ router.post(
     try {
       const user = await User.findById(req.user.id).select('-password');
       const post = await Post.findById(req.params.id);
-      let customer
+      let customer;
+      let center;
+      let avatar
       if (user) {
-         customer = await Customer.findOne({ user: user.id });
+        switch (user.role) {
+          case role.CUSTOMER:
+            customer = await Customer.findOne({ user: user.id });
+            avatar = customer.avatar;
+            break;
+          case role.CENTER:
+            center = await Center.findOne({ user: user.id });
+            avatar = center.avatar
+            break;
+          default:
+            break;
+        }
+
       }
       const newComment = new Post({
         text: req.body.text,
         name: user.name,
-        avatar: customer.avatar || '',
+        avatar,
         user: req.user.id,
         img: req.user.img
       });

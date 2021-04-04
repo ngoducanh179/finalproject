@@ -1,6 +1,8 @@
 const express = require('express');
 // const Profile = require('./../../models/Profile');
 const Customer = require('../../models/Customer')
+const Center = require('../../models/Center')
+
 const router = express.Router();
 const request = require('request');
 const config = require('config');
@@ -18,7 +20,7 @@ const _ = require( 'lodash');
         user: req.user.id
       }).populate('user', ['name', 'email', 'phone']);
     } else {
-       profile = await Customer.findOne({
+       profile = await Center.findOne({
         user: req.user.id
       })
     }
@@ -179,12 +181,12 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 //@route    POST api/profile/user/:user_id
 
 // @desc    Get profile by user id
 
 // @access  public
-
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Customer.findOne({
@@ -459,5 +461,80 @@ router.get('/github/:username', (req, res) => {
     res.status(500).send('server error');
   }
 });
+
+
+
+
+// get all centers
+
+router.get('/centers', async (req, res) => {
+  try {
+    let centers;
+    const textSearch = req.query.query
+    if(!_.isEmpty(textSearch)) {
+      centers = await Center.find({$text: {$search: textSearch}}).populate('user', ['name', 'email']);
+    } else {
+      centers = await Center.find().populate('user', ['name', 'email'])
+    }
+    res.json(centers);
+  } catch (e) {
+    console.error(e.message);
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// get center
+
+router.get('/center/:center_id', async (req, res) => {
+  try {
+    console.log(req.params.center_id);
+    const center = await Center.findOne({
+      _id: req.params.center_id
+    }).populate('user', ['name', 'email', 'phone']);
+    if (!center)
+      return res.status(400).json({
+        msg: 'there no center for this user'
+      });
+    res.json(center);
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// get center
+
+router.get('/center/price/:center_id', async (req, res) => {
+  try {
+    const sports = await Center.findOne({
+      _id: req.params.center_id
+    }).select('sports');
+    if (!sports)
+      return res.status(400).json({
+        msg: 'there no center for this user'
+      });
+    res.json(sports);
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
 
 module.exports = router;

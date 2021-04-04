@@ -38,6 +38,7 @@ router.post(
     check('confirm', 'confirm is invalid').not().isEmpty(),
   ],
   async (req, res) => {
+    console.log(2312312321);
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({ errors: error.array() });

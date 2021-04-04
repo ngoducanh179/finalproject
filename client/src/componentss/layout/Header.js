@@ -159,7 +159,7 @@ const Header = ({
                       <li>
                         {
                           isAuthenticated && role === 'customer' &&
-                          <Link to="/login/customer" onClick={closeMenu}> Phòng Tập</Link>
+                          <Link to="/centers" onClick={closeMenu}> Phòng Tập</Link>
                         }
                       </li>
                       <li>
@@ -171,6 +171,51 @@ const Header = ({
                       <li>
                         {
                           isAuthenticated && role === 'customer' &&
+                          <Link to="/login/customer" onClick={onClick} ><i class="fas fa-sign-out-alt"></i> Logout</Link>
+                        }
+                      </li>
+                    </ul>}
+
+                    {/* center */}
+
+                    {!hideSignin &&
+                    <ul
+                      className="list-reset header-nav-left"
+                    >
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
+                          <Link to="/" onClick={closeMenu}><strong>Trang Chủ</strong></Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
+                          <Link to="/posts" onClick={closeMenu}>Cộng Đồng</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
+                          <Link to="/profiles" onClick={closeMenu}>Tomfiter</Link>
+                        }
+                      </li>
+                      
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
+                          <Link to="/centers" onClick={closeMenu}> Phòng Tập</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
+                          <Link to="/login/customer" onClick={closeMenu}><i class="fas fa-user"></i> {user && user.name}</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
                           <Link to="/login/customer" onClick={onClick} ><i class="fas fa-sign-out-alt"></i> Logout</Link>
                         }
                       </li>

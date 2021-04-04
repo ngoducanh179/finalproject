@@ -10,7 +10,11 @@ import {
   GET_PROFILES,
   GET_REPOS,
   CLEAR_PROFILES,
-  GET_PROFILEID
+  GET_PROFILEID,
+  GET_CENTER,
+  CENTER_ERROR,
+  GET_CENTERID,
+  GET_CENTER_PRICE
 } from './Types';
 
 // Get current users profile
@@ -36,7 +40,7 @@ export const getProfiles = (query = '') => async dispatch => {
   dispatch({ type: CLEAR_PROFILES });
   try {
     const res = await axios.get(`/api/profile/?query=${query}`);
-
+    
     dispatch({
       type: GET_PROFILES,
       payload: res.data
@@ -44,6 +48,23 @@ export const getProfiles = (query = '') => async dispatch => {
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+//Get all profiles
+export const getCenters = (query = '') => async dispatch => {
+  dispatch({ type: CLEAR_PROFILES });
+  try {
+    const res = await axios.get(`/api/profile/centers/?query=${query}`);
+    dispatch({
+      type: GET_CENTER,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: CENTER_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }
     });
   }
@@ -227,5 +248,73 @@ export const deleteAccount = () => async dispatch => {
         payload: { msg: err.response.statusText, status: err.response.status }
       });
     }
+  }
+};
+
+// Create or update profile center
+
+export const createProfileCenter = (
+  FormData,
+  history,
+  edit = false
+) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    const res = await axios.post('/api/center/profile', FormData, config);
+    
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data
+    });
+
+    dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
+    if (!edit) {
+      history.push('/dashboard/center');
+    }
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+//get profile by id
+export const getCenterById = userId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/profile/center/${userId}`);
+    dispatch({ 
+      type: GET_CENTERID,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: CENTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+//get profile by id
+export const getPriceSports = userId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/profile/center/price/${userId}`);
+    dispatch({ 
+      type: GET_CENTER_PRICE,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: CENTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
   }
 };

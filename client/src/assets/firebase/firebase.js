@@ -6,9 +6,9 @@ const firebaseConfig = {
     projectId: "tomfit-7dacb",
     storageBucket: "tomfit-7dacb.appspot.com",
     messagingSenderId: "618261074583",
-    appId: "1:618261074583:web:53f9d2b0ea07cc67098fd2",
-    measurementId: "G-1CYMK2DVDB"
-};
+    appId: "1:618261074583:web:17344966e3265f5e098fd2",
+    measurementId: "G-BFLYQ5QTPX"
+  };
 firebase.initializeApp(firebaseConfig);
 
 const storage = firebase.storage();

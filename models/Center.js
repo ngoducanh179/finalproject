@@ -51,7 +51,8 @@ const CenterSchema = new moongoose.Schema({
         default: 0,
       },
       perhalfmonth: {
-        type: Number
+        type: Number,
+        default: 0,
       },
       permonth: {
         type: Number,

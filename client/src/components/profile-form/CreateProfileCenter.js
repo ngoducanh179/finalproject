@@ -2,32 +2,86 @@ import React, { Fragment, useState, useD } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { createProfile } from './../../actions/profile';
+import { createProfileCenter } from './../../actions/profile';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { storage } from "../../assets/firebase/firebase";
 import { setAlert } from '../../actions/alert'
+// import { RadioGroup, RadioButton } from 'react-radio-buttons';
+import { RadioGroup, Radio } from 'react-radio-group';
 
-
-const CreateProfileCenter = ({ createProfile, history }) => {
+const CreateProfileCenter = ({ createProfileCenter, history }) => {
     const [formData, setFormData] = useState({
-        fromWhere: '',
-        sex: '',
-        hobies: '',
+        from: '',
+        centerName: '',
         bio: '',
         twitter: '',
         facebook: '',
         linkedin: '',
         youtube: '',
+        website: '',
         instagram: '',
-        dateOfBirth: new Date(),
-        workedAt: '',
-        workerFrom: new Date(),
-        workerTo: new Date(),
+        avatar: '',
+        sports: {
+            gym: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+            yoga: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+            dance: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+            boxing: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+            badminton: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+            swimming: {
+                perhour: 0,
+                perhalfaday: 0,
+                perday: 0,
+                perhalfmonth: 0,
+                permonth: 0,
+                status: false
+            },
+        }
     });
 
     const [displaySocialInputs, toggleSocialInputs] = useState(false);
-    const [displayWorkAt, toggleWorkAt] = useState(false);
+    const [displayGym, toggleGym] = useState(false);
+    const [displayYoga, toggleYoga] = useState(false);
+    const [displayDance, toggleDance] = useState(false);
+    const [displayBoxing, toggleBoxing] = useState(false);
+    const [displayBadminton, toggleBadminton] = useState(false);
+    const [displaySwimming, toggleSwimming] = useState(false);
+
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("");
     const [progress, setProgress] = useState(0);
@@ -66,32 +120,188 @@ const CreateProfileCenter = ({ createProfile, history }) => {
     };
 
     const {
-        fromWhere,
-        sex,
-        hobies,
+        from,
+        centerName,
         bio,
         twitter,
         facebook,
         linkedin,
         youtube,
         instagram,
-        dateOfBirth,
-        workedAt,
-        workerFrom,
-        workerTo
+        website,
+        sports: {
+            gym,
+            yoga,
+            dance,
+            boxing,
+            badminton,
+            swimming
+        },
+        sports
     } = formData;
 
-    const onChange = (e, name = null) => {
-        if (name) {
-            setFormData({ ...formData, [name]: e });
-        } else {
-            setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = (e, name = null, status = null) => {
+        switch (name) {
+            case 'gym':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...gym,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...gym,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+            case 'yoga':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...yoga,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...yoga,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+            case 'dance':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...dance,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...dance,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+            case 'boxing':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...boxing,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...boxing,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+            case 'badminton':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...badminton,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...badminton,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+            case 'swimming':
+                if (status) {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...swimming,
+                                'status': e
+                            }
+                        }
+                    });
+                } else {
+                    setFormData({
+                        ...formData,
+                        sports: {
+                            ...sports,
+                            [name]: {
+                                ...swimming,
+                                [e.target.name]: e.target.value
+                            }
+                        }
+                    });
+                }
+                break;
+
+            default:
+                setFormData({ ...formData, [e.target.name]: e.target.value });
+                break;
         }
 
     }
     const onSubmit = e => {
         e.preventDefault();
-        createProfile(formData, history);
+        createProfileCenter(formData, history);
     };
     return (
         <Fragment>
@@ -107,8 +317,8 @@ const CreateProfileCenter = ({ createProfile, history }) => {
                     <input
                         type='text'
                         placeholder='Tên Phòng Gym'
-                        name='fromWhere'
-                        value={fromWhere}
+                        name='centerName'
+                        value={centerName}
                         onChange={e => onChange(e)}
                     />
                 </div>
@@ -118,8 +328,8 @@ const CreateProfileCenter = ({ createProfile, history }) => {
                     <input
                         type='text'
                         placeholder='Website Của Phòng Gym Nếu Có'
-                        name='fromWhere'
-                        value={fromWhere}
+                        name='website'
+                        value={website}
                         onChange={e => onChange(e)}
                     />
                 </div>
@@ -129,8 +339,8 @@ const CreateProfileCenter = ({ createProfile, history }) => {
                     <input
                         type='text'
                         placeholder='Phòng Gym Của Bạn Ở Tình, Thành Phố'
-                        name='fromWhere'
-                        value={fromWhere}
+                        name='from'
+                        value={from}
                         onChange={e => onChange(e)}
                     />
                 </div>
@@ -164,7 +374,6 @@ const CreateProfileCenter = ({ createProfile, history }) => {
                 <div className='my-2'>
                     <button
                         onClick={() => {
-                            toggleWorkAt(false)
                             toggleSocialInputs(!displaySocialInputs)
                         }}
                         type='button'
@@ -174,21 +383,6 @@ const CreateProfileCenter = ({ createProfile, history }) => {
           </button>
                     <span>Không Bắt Buộc</span>
                 </div>
-
-                <div className='my-2'>
-                    <button
-                        onClick={() => {
-                            toggleWorkAt(!displayWorkAt)
-                            toggleSocialInputs(false)
-                        }}
-                        type='button'
-                        className='btn btn-light'
-                    >
-                        Thêm Nơi Bạn Đã Làm Việc
-          </button>
-                    <span>Không Bắt Buộc</span>
-                </div>
-
                 {displaySocialInputs && (
                     <Fragment>
                         <div className='form-group social-input'>
@@ -247,43 +441,604 @@ const CreateProfileCenter = ({ createProfile, history }) => {
                         </div>
                     </Fragment>
                 )}
-
-                {displayWorkAt &&
+                {/* gym */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleGym(!displayGym)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        Gyms sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displayGym &&
                     (
                         <Fragment>
                             <div className='form-group social-input'>
-                                <i className='fas fa-building fa-2x'></i>
+                                <i class="fas fa-dollar-sign"></i>
                                 <input
-                                    type='text'
-                                    placeholder='Nơi Làm Việc'
-                                    name='workedAt'
-                                    value={workedAt}
-                                    onChange={e => onChange(e)}
-                                />
-                            </div>
-                            <div className='form-group social-input'>
-                                <i className='fas fas fa-clock fa-2x'></i>
-                                <DatePicker
-                                    selected={workerFrom}
-                                    onChange={e => onChange(e, 'workerFrom')}
-                                    name='workerFrom'
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={gym.perhour}
+                                    onChange={e => onChange(e, 'gym')}
                                 />
                                 <small className='form-text'>
-                                    Ngày Bắt Đầu
-          </small>
-                            </div>
-                            <div className='form-group social-input'>
-                                <i className='fas fas fa-clock fa-2x'></i>
-                                <DatePicker
-                                    selected={workerTo}
-                                    onChange={e => onChange(e, 'workerTo')}
-                                    name='workerTo'
-                                />
-                                <small className='form-text'>
-                                    Ngày Kết Thúc (Nếu Hiện Tại Chọn Ngày Hôm Nay)
-          </small>
+                                    Giá 1 giờ
+                                                </small>
                             </div>
 
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={gym.perhalfaday}
+                                    onChange={e => onChange(e, 'gym')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={gym.perday}
+                                    onChange={e => onChange(e, 'gym')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={gym.perhalfmonth}
+                                    onChange={e => onChange(e, 'gym')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={gym.permonth}
+                                    onChange={e => onChange(e, 'gym')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                                </small>
+
+                                <RadioGroup selectedValue={gym.status} onChange={e => onChange(e, 'gym', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
+                        </Fragment>
+                    )
+                }
+                {/* yoga */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleYoga(!displayYoga)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        Yoga sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displayYoga &&
+                    (
+                        <Fragment>
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={yoga.perhour}
+                                    onChange={e => onChange(e, 'yoga')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 giờ
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={yoga.perhalfaday}
+                                    onChange={e => onChange(e, 'yoga')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={yoga.perday}
+                                    onChange={e => onChange(e, 'yoga')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={yoga.perhalfmonth}
+                                    onChange={e => onChange(e, 'yoga')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={yoga.permonth}
+                                    onChange={e => onChange(e, 'yoga')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                </small>
+                                <RadioGroup selectedValue={yoga.status} onChange={e => onChange(e, 'yoga', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
+                        </Fragment>
+                    )
+                }
+                {/* dance */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleDance(!displayDance)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        dance sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displayDance &&
+                    (
+                        <Fragment>
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={dance.perhour}
+                                    onChange={e => onChange(e, 'dance')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 giờ
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={dance.perhalfaday}
+                                    onChange={e => onChange(e, 'dance')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={dance.perday}
+                                    onChange={e => onChange(e, 'dance')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={dance.perhalfmonth}
+                                    onChange={e => onChange(e, 'dance')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={dance.permonth}
+                                    onChange={e => onChange(e, 'dance')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                </small>
+                                <RadioGroup selectedValue={dance.status} onChange={e => onChange(e, 'dance', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
+                        </Fragment>
+                    )
+                }
+                {/* boxing */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleBoxing(!displayBoxing)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        boxing sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displayBoxing &&
+                    (
+                        <Fragment>
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={boxing.perhour}
+                                    onChange={e => onChange(e, 'boxing')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 giờ
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={boxing.perhalfaday}
+                                    onChange={e => onChange(e, 'boxing')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={boxing.perday}
+                                    onChange={e => onChange(e, 'boxing')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={boxing.perhalfmonth}
+                                    onChange={e => onChange(e, 'boxing')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={boxing.permonth}
+                                    onChange={e => onChange(e, 'boxing')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                </small>
+                                <RadioGroup selectedValue={boxing.status} onChange={e => onChange(e, 'boxing', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
+                        </Fragment>
+                    )
+                }
+                {/* badminton */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleBadminton(!displayBadminton)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        badminton sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displayBadminton &&
+                    (
+                        <Fragment>
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={badminton.perhour}
+                                    onChange={e => onChange(e, 'badminton')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 giờ
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={badminton.perhalfaday}
+                                    onChange={e => onChange(e, 'badminton')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={badminton.perday}
+                                    onChange={e => onChange(e, 'badminton')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={badminton.perhalfmonth}
+                                    onChange={e => onChange(e, 'badminton')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={badminton.permonth}
+                                    onChange={e => onChange(e, 'badminton')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                </small>
+                                <RadioGroup selectedValue={badminton.status} onChange={e => onChange(e, 'badminton', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
+                        </Fragment>
+                    )
+                }
+                {/* swimming */}
+                <div className='my-2'>
+                    <button
+                        onClick={() => {
+                            toggleSwimming(!displaySwimming)
+                            toggleSocialInputs(false);
+                        }}
+                        type='button'
+                        className='btn btn-light'
+                    >
+                        swimming sports
+          </button>
+                    <span>Không Bắt Buộc</span>
+                </div>
+                {displaySwimming &&
+                    (
+                        <Fragment>
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='giá 1 giờ'
+                                    name='perhour'
+                                    value={swimming.perhour}
+                                    onChange={e => onChange(e, 'swimming')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 giờ
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 buổi'
+                                    name='perhalfaday'
+                                    value={swimming.perhalfaday}
+                                    onChange={e => onChange(e, 'swimming')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 buổi
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 ngày'
+                                    name='perday'
+                                    value={swimming.perday}
+                                    onChange={e => onChange(e, 'swimming')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 ngày
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá nửa tháng'
+                                    name='perhalfmonth'
+                                    value={swimming.perhalfmonth}
+                                    onChange={e => onChange(e, 'swimming')}
+                                />
+                                <small className='form-text'>
+                                    Giá nửa tháng
+                                </small>
+                            </div>
+
+                            <div className='form-group social-input'>
+                                <i class="fas fa-dollar-sign"></i>
+                                <input
+                                    type='number'
+                                    placeholder='Giá 1 tháng'
+                                    name='permonth'
+                                    value={swimming.permonth}
+                                    onChange={e => onChange(e, 'swimming')}
+                                />
+                                <small className='form-text'>
+                                    Giá 1 tháng
+                                </small>
+                            </div>
+
+                            <div>
+                                <small className='form-text'>
+                                    Bạn có môn thể thao này không ?
+                                </small>
+                                <RadioGroup selectedValue={swimming.status} onChange={e => onChange(e, 'swimming', 'status')}>
+                                    <Radio value={true} /> Có
+                                    <br />
+                                    <Radio value={false} /> Không
+                            </RadioGroup>
+                            </div>
                         </Fragment>
                     )
                 }
@@ -298,7 +1053,7 @@ const CreateProfileCenter = ({ createProfile, history }) => {
 };
 
 CreateProfileCenter.propTypes = {
-    createProfile: PropTypes.func.isRequired
+    createProfileCenter: PropTypes.func.isRequired
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfileCenter));
+export default connect(null, { createProfileCenter })(withRouter(CreateProfileCenter));

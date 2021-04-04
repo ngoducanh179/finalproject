@@ -24,10 +24,13 @@ import AddExperience from './components//profile-form/AddExperience';
 import AddEducation from './components//profile-form/AddEducation';
 import PrivateRoute from './routing/PrivateRoute';
 import Profiles from './components/profile/Profiles';
+import Centers from './components/centers/Centers';
+import Booking from './components/booking/Booking';
 import Profile from './components/profileid/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import './App.css';
+import CenterId from './components/centers/CenterId';
 
 if (localStorage.token && localStorage.role) {
   setAuthToken(localStorage.token, localStorage.role);
@@ -53,9 +56,13 @@ const App = () => {
                 <Route exact path='/Register/customer' component={RegisterCustomer} />
                 <Route exact path='/Register/center' component={RegisterCenter} />
                 <Route exact path='/profiles' component={Profiles} />
+                <Route exact path='/centers' component={Centers} /> 
                 <Route exact path='/profile/:id' component={Profile} />
+                <Route exact path='/center/:id' component={CenterId} />
+
                 <PrivateRoute exact path='/dashboard' component={Dashboard} />
                 <PrivateRoute exact path='/dashboard/center' component={DashboardCenter} />
+                <PrivateRoute exact path='/booking/:centerId/:sport' component={Booking} />
 
                 <PrivateRoute
                   exact

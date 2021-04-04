@@ -808,6 +808,18 @@ a.text-lightred:hover {
   border-radius: .25rem;
 }
 
+.avatar-size {
+  max-height: 900px;
+}
+
+.fa-map-marker-alt{
+  color:#00e6e6;
+}
+
+.fa-check-circle{
+  color:  #00e6e6;
+
+}
 
 .bg-sky {
   background-color: #02c2c7
@@ -835,4 +847,20 @@ a.text-lightred:hover {
 
 .bg-lightred {
   background-color: #ff5722
+}
+
+.fa-dollar-sign {
+  color: green;
+}
+
+.fa-sticky-note {
+  color: gold;
+}
+
+.pink-1 {
+  color: #ff48a4;
+}
+
+.pink-2 {
+  color: aquamarine;
 }
