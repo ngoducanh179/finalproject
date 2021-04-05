@@ -11,16 +11,16 @@ const { check, validationResult } = require('express-validator');
 const auth = require('./../../middleware/auth');
 const Post = require('./../../models/Post');
 const { role, statusCustomer } = require('../../config/constant');
-const _ = require( 'lodash');
- router.get('/me', auth, async (req, res) => {
+const _ = require('lodash');
+router.get('/me', auth, async (req, res) => {
   try {
     let profile
-    if(req.role === role.CUSTOMER) {
-       profile = await Customer.findOne({
+    if (req.role === role.CUSTOMER) {
+      profile = await Customer.findOne({
         user: req.user.id
       }).populate('user', ['name', 'email', 'phone']);
     } else {
-       profile = await Center.findOne({
+      profile = await Center.findOne({
         user: req.user.id
       })
     }
@@ -166,8 +166,8 @@ router.get('/', async (req, res) => {
   try {
     let profiles;
     const textSearch = req.query.query
-    if(!_.isEmpty(textSearch)) {
-      profiles = await Customer.find({$text: {$search: textSearch}}).populate('user', ['name', 'email']);
+    if (!_.isEmpty(textSearch)) {
+      profiles = await Customer.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
     } else {
       profiles = await Customer.find().populate('user', ['name', 'email'])
     }
@@ -471,8 +471,8 @@ router.get('/centers', async (req, res) => {
   try {
     let centers;
     const textSearch = req.query.query
-    if(!_.isEmpty(textSearch)) {
-      centers = await Center.find({$text: {$search: textSearch}}).populate('user', ['name', 'email']);
+    if (!_.isEmpty(textSearch)) {
+      centers = await Center.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
     } else {
       centers = await Center.find().populate('user', ['name', 'email'])
     }
@@ -536,5 +536,55 @@ router.get('/center/price/:center_id', async (req, res) => {
   }
 });
 
+// Booking
+
+router.post('/center/booking/:sport/:userId/:centerId/', async (req, res) => {
+  try {
+    const { from, to, price, note } = req.body
+    const booking = {
+      userId: req.params.userId,
+      from,
+      to,
+      price,
+      kindOfSport: req.params.sport,
+      status: 'pending',
+      note,
+    }
+    const bookingUser = {
+      centerId: req.params.centerId,
+      from,
+      to,
+      price,
+      kindOfSport: req.params.sport,
+      status: 'pending',
+      note
+    }
+    const center = await Center.findOne({
+      _id: req.params.centerId
+    })
+    const customer = await Customer.findOne({
+      user: req.params.userId
+    })
+    center.customerUsed.unshift(booking);
+    customer.history.unshift(bookingUser)
+    await center.save()
+    await customer.save()
+    if (!center || !customer)
+      return res.status(400).json({
+        msg: 'Không Thể Đặt Lịch'
+      });
+    res.json({msg: 'Đặt Lịch Thành Công'});
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
 
 module.exports = router;

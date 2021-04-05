@@ -9,7 +9,8 @@ import {
   GET_PROFILEID,
   GET_CENTER,
   GET_CENTERID,
-  GET_CENTER_PRICE
+  GET_CENTER_PRICE,
+  BOOKING_SCHEDULE
 } from '../actions/Types';
 
 const initialState = {
@@ -87,6 +88,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         price: payload,
+        loading: false
+      };
+      case BOOKING_SCHEDULE:
+      return {
+        ...state,
         loading: false
       };
     default:

@@ -68,7 +68,13 @@ const CustomerSchema = new mongoose.Schema({
             to: {
                 type: Date
             },
+            price:{
+                type: String
+            },
             status: {
+                type: String
+            },
+            note: {
                 type: String
             }
         }

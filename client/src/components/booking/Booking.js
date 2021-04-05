@@ -3,26 +3,27 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getPriceSports } from './../../actions/profile';
+import { Link, withRouter } from 'react-router-dom';
+import { getPriceSports, updateBooking } from './../../actions/profile';
 import Spinner from './../layout/Spinner';
 
 function Booking(
   { match,
     getPriceSports,
-    profile: { price, loading }
+    updateBooking,
+    profile: { price, loading },
+    auth: { user },
+    history
   }
 ) {
-  const onChange = (name) => {
-    console.log(1);
-  }
-  const onSubmit = () => {
-    console.log(2);
-  }
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [endPrice, setEndPrice] = useState(null);
-  const [note, setNote] = useState('')
+  const [note, setNote] = useState('');
+  const [from, setFrom] =useState();
+  const [to, setTo] =useState();
+
   useEffect(() => {
     getPriceSports(match.params.centerId);
     if (startDate && endDate) {
@@ -42,7 +43,12 @@ function Booking(
       }
     }
   }, [startDate, endDate])
-
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (user) {
+      updateBooking(user._id, match.params.centerId, match.params.sport, {note: note, price: endPrice, from: startDate, to: endDate}, history)
+    }
+  }
   return loading && price === null ? (
     <Spinner />
   ) : (
@@ -57,8 +63,6 @@ function Booking(
           <i className='fas fa-user'></i> Hãy Đặt Lịch Tập Với TomFit
       </p>
         <form className='form' onSubmit={e => onSubmit(e)}>
-
-
           <Fragment>
             <div className='form-group social-input'>
               <i class="fas fa-calendar-alt fa-2x pink-2"></i>
@@ -118,7 +122,7 @@ const mapStateToProps = state => ({
   auth: state.auth,
   profile: state.profile
 });
-export default connect(mapStateToProps, { getPriceSports })(
-  Booking
+export default connect(mapStateToProps, { getPriceSports, updateBooking })(
+  withRouter(Booking)
 );
 

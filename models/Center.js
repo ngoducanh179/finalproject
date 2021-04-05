@@ -236,16 +236,22 @@ const CenterSchema = new moongoose.Schema({
       userId: {
         type: String
       },
-      username: {
-        type: String
-      },
       from: {
         type: Date
       },
       to: {
         type: Date
       },
-      product: {
+      kindOfSport: {
+        type: String
+      },
+      status: {
+        type: String
+      },
+      price: {
+        type: String
+      },
+      note: {
         type: String
       }
     }

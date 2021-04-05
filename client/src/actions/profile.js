@@ -14,7 +14,8 @@ import {
   GET_CENTER,
   CENTER_ERROR,
   GET_CENTERID,
-  GET_CENTER_PRICE
+  GET_CENTER_PRICE,
+  BOOKING_SCHEDULE
 } from './Types';
 
 // Get current users profile
@@ -303,13 +304,35 @@ export const getCenterById = userId => async dispatch => {
   }
 };
 
-//get profile by id
+//get sport
 export const getPriceSports = userId => async dispatch => {
   try {
     const res = await axios.get(`/api/profile/center/price/${userId}`);
     dispatch({ 
       type: GET_CENTER_PRICE,
       payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: CENTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+//get profile by id
+export const updateBooking = (userId, centerId, sport, FormData, history) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    await axios.post(`/api/profile/center/booking/${sport}/${userId}/${centerId}`, FormData, config);
+    dispatch(setAlert('Đặt Lịch Thành Công', 'success'));
+    history.push('/dashboard')
+    dispatch({ 
+      type: BOOKING_SCHEDULE,
     });
   } catch (err) {
     dispatch({
