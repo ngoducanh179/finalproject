@@ -29,6 +29,8 @@ import Booking from './components/booking/Booking';
 import Profile from './components/profileid/Profile';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
+import Confirm from './components/confirm/Confirm';
+
 import './App.css';
 import CenterId from './components/centers/CenterId';
 
@@ -63,6 +65,7 @@ const App = () => {
                 <PrivateRoute exact path='/dashboard' component={Dashboard} />
                 <PrivateRoute exact path='/dashboard/center' component={DashboardCenter} />
                 <PrivateRoute exact path='/booking/:centerId/:sport' component={Booking} />
+                <PrivateRoute exact path='/confirm' component={Confirm} />
 
                 <PrivateRoute
                   exact

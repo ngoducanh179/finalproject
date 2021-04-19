@@ -10,7 +10,8 @@ import {
   GET_CENTER,
   GET_CENTERID,
   GET_CENTER_PRICE,
-  BOOKING_SCHEDULE
+  BOOKING_SCHEDULE,
+  UPDATE_ORDER
 } from '../actions/Types';
 
 const initialState = {
@@ -95,6 +96,11 @@ export default function (state = initialState, action) {
         ...state,
         loading: false
       };
+      case UPDATE_ORDER:
+        return {
+          ...state,
+          loading: false
+        };
     default:
       return state;
   }

@@ -69,25 +69,6 @@ const Center = ({
                       <p className="no-margin-bottom"><i class="fas fa-map-marker-alt"></i> {centerid.from || ''}</p>
                       <p className="no-margin-bottom"><i className="fas fa-mobile-alt text-purple"></i> {centerid && centerid.user && centerid.user.phone || ''}</p>
                       <p className="no-margin-bottom"><i className="fas fa-envelope text-pink"></i>  {centerid && centerid.user && centerid.user.email || ''}</p>
-
-                      <div className="contact-info-section margin-40px-tb">
-                        <ul className="list-style9 no-margin">
-                          <li>
-                            <div className="row">
-                              <div className="col-md-5 col-5">
-                                <i className="fas fa-envelope text-yellow"></i>
-                                <strong className="margin-10px-left xs-margin-four-left text-yellow"> Worked At:</strong>
-                              </div>
-                              <div className="col-md-7 col-7">
-                                <p>{centerid && centerid.sports && centerid.sports.gym.perhalfaday}</p>
-                                {/* {result && result.map((e, index) => {
-                                  return <p key={index}>{e.permonth || ''}</p>
-                                })} */}
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
                       <div className='profile-grid my-1'>
                         <div className='profile-exp p-2'>
                           <h2 class='text-primary'>Các Môn Thể Thao Của {centerid.centerName}</h2>

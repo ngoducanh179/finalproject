@@ -182,12 +182,12 @@ const Header = ({
                     <ul
                       className="list-reset header-nav-left"
                     >
-                      <li>
+                      {/* <li>
                         {
                           isAuthenticated && role === 'center' &&
                           <Link to="/" onClick={closeMenu}><strong>Trang Chủ</strong></Link>
                         }
-                      </li>
+                      </li> */}
                       <li>
                         {
                           isAuthenticated && role === 'center' &&
@@ -210,13 +210,19 @@ const Header = ({
                       <li>
                         {
                           isAuthenticated && role === 'center' &&
+                          <Link to="/confirm" onClick={closeMenu} ><i class="fab fa-first-order"></i> Order</Link>
+                        }
+                      </li>
+                      <li>
+                        {
+                          isAuthenticated && role === 'center' &&
                           <Link to="/login/customer" onClick={closeMenu}><i class="fas fa-user"></i> {user && user.name}</Link>
                         }
                       </li>
                       <li>
                         {
                           isAuthenticated && role === 'center' &&
-                          <Link to="/login/customer" onClick={onClick} ><i class="fas fa-sign-out-alt"></i> Logout</Link>
+                          <Link to="/login/customer" onClick={onClick} ><i class="fas fa-sign-out-alt"></i>Logout</Link>
                         }
                       </li>
                     </ul>}

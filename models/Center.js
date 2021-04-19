@@ -234,7 +234,8 @@ const CenterSchema = new moongoose.Schema({
   customerUsed: [
     {
       userId: {
-        type: String
+        type: String,
+        ref: 'user'
       },
       from: {
         type: Date

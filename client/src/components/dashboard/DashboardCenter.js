@@ -63,60 +63,8 @@ const DashboardCenter = ({
                     <p className="no-margin-bottom"><i className="fas fa-mobile-alt text-purple"></i> {user && user.phone || ''}</p>
                     <p className="no-margin-bottom"><i className="fas fa-envelope text-pink"></i>  {user && user.email || ''}</p>
 
-                    <div className="contact-info-section margin-40px-tb">
-                      <ul className="list-style9 no-margin">
-                        <li>
-                          <div className="row">
-                            <div className="col-md-5 col-5">
-                              <i className="fas fa-envelope text-yellow"></i>
-                              <strong className="margin-10px-left xs-margin-four-left text-yellow"> Worked At:</strong>
-                            </div>
-                            <div className="col-md-7 col-7">
-                              <p>{profile && profile.sports && profile.sports.gym.perhalfaday}</p>
-                              {/* {result && result.map((e, index) => {
-                                  return <p key={index}>{e.permonth || ''}</p>
-                                })} */}
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
                     <div className='profile-grid my-1'>
                       <ListSport profile={profile} />
-                      <div className='profile-exp p-2'>
-                        <h2 className='text-primary'>Đánh Giá</h2>
-                        {/* {profileid.workedAt.length ? (
-                          <Fragment>
-                            {profileid.workedAt.map((work, index) => (
-                              <ProfileExperience
-                                key={index}
-                                work={work}
-                              />
-                            ))}
-                          </Fragment>
-                        ) : (
-                          <h4>Không Tìm Thấy ...</h4>
-                        )} */}
-                      </div>
-
-                      <div className='profile-edu p-2'>
-                        <h2 className='text-primary'>Lịch Sử Tập Luyện</h2>
-                        {/* {profileid.history.length ? (
-                          <Fragment>
-                            {profileid.history.map((his, index) => (
-                              <ProfileEducation
-                                key={index}
-                                his={his}
-                              />
-                            ))}
-                          </Fragment>
-                        ) : (
-                          <h4>Không Tìm Thấy ...</h4>
-                        )} */}
-                      </div>
-                      {/* {profileid.githubusername && (
-              <ProfileGithub username={profileid.githubusername} />
-            )} */}
                     </div>
                   </div>
                 </div>

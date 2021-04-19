@@ -57,7 +57,7 @@ const CustomerSchema = new mongoose.Schema({
         {
             centerId: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'center'
+                ref: 'Center'
             },
             kindOfSport: {
                 type: String

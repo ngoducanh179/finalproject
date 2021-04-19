@@ -2,13 +2,14 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 const ProfileEducation = ({
-  his: { kindOfSport, from, to, status }
+  his: { kindOfSport, from, to, status, centerId }
 }) => {
-  return (
+  return (  
     <Fragment>
       { kindOfSport &&
         <div>
-        <h3 className='text-dark'>{kindOfSport}</h3>
+        <h3 className='text-primary'>{centerId.centerName}</h3>
+        <p className='text-dark'>{kindOfSport}</p>
         <p>
           <Moment format='YYYY/MM/DD'>{from}</Moment> -{' '}
           {!to ? 'Now' : <Moment format='YYYY/MM/DD'>{to}</Moment>}

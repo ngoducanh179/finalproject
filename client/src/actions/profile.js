@@ -15,7 +15,8 @@ import {
   CENTER_ERROR,
   GET_CENTERID,
   GET_CENTER_PRICE,
-  BOOKING_SCHEDULE
+  BOOKING_SCHEDULE,
+  UPDATE_ORDER
 } from './Types';
 
 // Get current users profile
@@ -341,3 +342,27 @@ export const updateBooking = (userId, centerId, sport, FormData, history) => asy
     });
   }
 };
+
+//get profile by id
+export const updateOrder = (centerId, orderId, FormData) => async dispatch => {
+  try {
+    console.log(222);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    await axios.post(`/api/profile/center/order/${centerId}/${orderId}`, FormData, config);
+    dispatch(setAlert('Update order thành công!', 'success'));
+    dispatch({ 
+      type: UPDATE_ORDER,
+    });
+  } catch (err) {
+    dispatch({
+      type: CENTER_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
+
