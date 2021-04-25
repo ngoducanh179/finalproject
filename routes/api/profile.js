@@ -26,7 +26,6 @@ router.get('/me', auth, async (req, res) => {
       }).populate('customerUsed.userId', ['name'])
     }
 
-
     if (!profile) {
       return res.status(400).json({
         msg: 'There is no profile for this user'
@@ -89,9 +88,6 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (sex) profileFields.sex = sex;
     if (dateOfBirth) profileFields.dateOfBirth = dateOfBirth;
-    if (hobies) {
-      profileFields.hobies = hobies.split(',').map(hobie => hobie.trim());
-    }
     if (avatar) {
       profileFields.avatar = avatar;
     } else {
@@ -120,6 +116,9 @@ router.post(
       //create
 
       if (!customer) {
+        if (hobies) {
+          profileFields.hobies = hobies.split(',').map(hobie => hobie.trim());
+        }
         profileFields.updateAt = new Date();
         customer = new Customer(profileFields);
 
@@ -129,6 +128,7 @@ router.post(
 
       // update
       if (customer) {
+        
         profileFields.updateAt = new Date();
         customer = await Customer.findOneAndUpdate(
           {
@@ -145,7 +145,6 @@ router.post(
             console.log('something wrong when updating data');
           }
         );
-
         return res.json(customer);
       }
 
@@ -489,7 +488,6 @@ router.get('/centers', async (req, res) => {
 
 router.get('/center/:center_id', async (req, res) => {
   try {
-    console.log(req.params.center_id);
     const center = await Center.findOne({
       _id: req.params.center_id
     }).populate('user', ['name', 'email', 'phone']);
@@ -612,7 +610,6 @@ router.post('/center/order/:centerId/:orderId', async (req, res) => {
     const orderConfirmCustomer = customer.history.find(y => {
       return y.from.toString() == orderConfirm.from && y.to.toString() == orderConfirm.to && y.price.toString() == orderConfirm.price && y.kindOfSport.toString() == orderConfirm.kindOfSport && y.note.toString() == orderConfirm.note
     });
-    console.log(orderConfirmCustomer);
     if (!center || !customer)
       return res.status(400).json({
         msg: 'there no center for this user'

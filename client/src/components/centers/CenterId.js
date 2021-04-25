@@ -13,13 +13,12 @@ const Center = ({
   getCenterById,
   profile: { centerid, loading },
   auth,
-  match
+  match,
 }) => {
   useEffect(() => {
     getCenterById(match.params.id);
   }, [getCenterById, match.params.id]);
   const [show, setShow] = useState(false);
-  console.log();
   return (
     <Fragment>
       {centerid === null || loading ? (
@@ -36,7 +35,7 @@ const Center = ({
           {auth.isAuthenticated &&
             auth.loading === false &&
             auth.user._id === centerid.user._id && (
-              <Link to='/edit-profile' className='btn btn-dark'>
+              <Link to='/edit-profile/center' className='btn btn-dark'>
                 Sửa Thông Tin
               </Link>
             )}
@@ -52,7 +51,7 @@ const Center = ({
 
                       <div className="margin-20px-top team-single-icons">
                         <ul className="no-margin">
-                          <li><a href={centerid.social && centerid.social.facebook || ''}><i className="fab fa-facebook-f"></i></a></li>
+                          <li><a href={centerid.social && centerid.social.facebook || ''}><i className="fab fa-facebook-messenger"></i></a></li>
                           <li><a href={centerid.social && centerid.social.twitter || ''}><i className="fab fa-twitter"></i></a></li>
                           <li><a href={centerid.social && centerid.social.google || ''}><i className="fab fa-google-plus-g"></i></a></li>
                           <li><a href={centerid.social && centerid.social.instagram || ''}><i className="fab fa-instagram"></i></a></li>
@@ -92,10 +91,10 @@ const Center = ({
                               </div>
                             }
                             {centerid && centerid.sports && centerid.sports.gym && centerid.sports.gym.status &&
-                              <Link to={`/booking/${match.params.id}/gym`} className='p-1' >
+                              auth && auth.user && auth.user.role !== 'center' ? (<Link to={`/booking/${match.params.id}/gym`} className='p-1' >
 
-                                <i className='fas fa-check'></i>{'gym'}
-                              </Link>
+                              <i className='fas fa-check'></i>{'gym'}
+                            </Link>) : (<i className='fas fa-check'> Gym</i>)
                             }
                             {centerid && centerid.sports && centerid.sports.soccer && centerid.sports.soccer.status &&
                               <div className='p-1'>
@@ -130,7 +129,7 @@ const Center = ({
 
 
                         <div className='profile-edu p-2'>
-                          <h2 className='text-primary'>Lịch Sử Tập Luyện</h2>
+                          {/* <h2 className='text-primary'>Lịch Sử Tập Luyện</h2> */}
                           {/* {profileid.history.length ? (
                           <Fragment>
                             {profileid.history.map((his, index) => (

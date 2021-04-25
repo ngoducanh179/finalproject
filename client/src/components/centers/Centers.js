@@ -5,7 +5,7 @@ import Spinner from '../layout/Spinner';
 import CenterItem from './CenterItem';
 import { getCenters } from './../../actions/profile';
 import './style.css';
-import Pagination from "react-js-pagination";
+// import Pagination from "react-js-pagination";
 
 
 const Centers = ({ getCenters, profile: { centers, loading } }) => {
@@ -13,7 +13,6 @@ const Centers = ({ getCenters, profile: { centers, loading } }) => {
   useEffect(() => {
     getCenters(search);
   }, [getCenters, search]);
-  console.log(centers);
   return (
     <Fragment>
       {loading ? (
@@ -22,7 +21,7 @@ const Centers = ({ getCenters, profile: { centers, loading } }) => {
           <Fragment>
             <br />
             <br />
-            <h1 className='text-primary'>TomFiter</h1>
+            <h1 className='text-primary'>Phòng Tập</h1>
             <p className='lead'>
               <form className='form1'>
                 <input className='input1' type="search" value={search} onChange={e => setSearch(e.target.value)} />

@@ -22,7 +22,6 @@ const DashboardCenter = ({
   //  result = Object.keys(profile.sports).map((key) => profile.sports[key]);
   // console.log(result);
   // }
-  console.log(profile);
   return loading && profile === null ? (
     <Spinner />
   ) : (

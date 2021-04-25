@@ -19,7 +19,9 @@ import DashboardCenter from './components/dashboard/DashboardCenter';
 import CreateProfile from './components//profile-form/CreateProfile';
 import CreateProfileCenter from './components//profile-form/CreateProfileCenter';
 
-import EditsProfile from './components//profile-form/EditsProfile';
+import EditsProfileCenter from './components/profile-form/EditsProfileCenter';
+import EditsProfile from './components/profile-form/EditsProfile';
+
 import AddExperience from './components//profile-form/AddExperience';
 import AddEducation from './components//profile-form/AddEducation';
 import PrivateRoute from './routing/PrivateRoute';
@@ -76,6 +78,11 @@ const App = () => {
                   exact
                   path='/create-profile/center'
                   component={CreateProfileCenter}
+                />
+                <PrivateRoute
+                  exact
+                  path='/edit-profile/center'
+                  component={EditsProfileCenter}
                 />
                 <PrivateRoute
                   exact

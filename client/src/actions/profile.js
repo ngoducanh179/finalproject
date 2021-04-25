@@ -119,7 +119,6 @@ export const createProfile = (
       }
     };
     const res = await axios.post('/api/profile', FormData, config);
-    
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -346,7 +345,6 @@ export const updateBooking = (userId, centerId, sport, FormData, history) => asy
 //get profile by id
 export const updateOrder = (centerId, orderId, FormData) => async dispatch => {
   try {
-    console.log(222);
     const config = {
       headers: {
         'Content-Type': 'application/json'

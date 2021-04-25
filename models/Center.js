@@ -6,7 +6,8 @@ const CenterSchema = new moongoose.Schema({
     ref: 'user'
   },
   centerName: {
-    type: String
+    type: String,
+    text: true
   },
   website: {
     type: String
@@ -34,7 +35,6 @@ const CenterSchema = new moongoose.Schema({
   },
   search: {
     type: String,
-    text: true
   },
   sports: {
     gym: {

@@ -74,7 +74,6 @@ router.post(
 router.get('/', auth, async (req, res) => {
   try {
     const posts = await Post.find().sort({ date: -1 });
-    console.log(posts);
     res.json(posts);
   } catch (e) {
     console.error(e.message);
@@ -263,6 +262,7 @@ router.post(
 
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
+    console.log(req.params.id, req.params.comment_id);
     const post = await Post.findById(req.params.id);
     // const comment = await findById(req.params.comment_id);
     const comment = post.comments.find(
@@ -280,6 +280,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     post.comments.splice(indexRemove, 1);
 
     await post.save();
+    console.log(post.comments);
     res.json(post.comments);
   } catch (e) {
     console.error(e.message);
