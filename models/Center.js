@@ -6,7 +6,8 @@ const CenterSchema = new moongoose.Schema({
     ref: 'user'
   },
   centerName: {
-    type: String
+    type: String,
+    text: true
   },
   website: {
     type: String
@@ -22,9 +23,18 @@ const CenterSchema = new moongoose.Schema({
       type: String
     }
   },
+  from:{
+    type:String
+  },
+  avatar: {
+    type: String
+  },
   status: {
     type: String,
     required: true
+  },
+  search: {
+    type: String,
   },
   sports: {
     gym: {
@@ -41,7 +51,8 @@ const CenterSchema = new moongoose.Schema({
         default: 0,
       },
       perhalfmonth: {
-        type: Number
+        type: Number,
+        default: 0,
       },
       permonth: {
         type: Number,
@@ -122,15 +133,109 @@ const CenterSchema = new moongoose.Schema({
       status: {
         type: Boolean
       }
-    }
+    },
+    badminton: {
+      perhour: {
+        type: Number,
+        default: 0,
+      },
+      perhalfaday: {
+        type: Number,
+        default: 0,
+      },
+      perday: {
+        type: Number,
+        default: 0,
+      },
+      perhalfmonth: {
+        type: Number
+      },
+      permonth: {
+        type: Number,
+        default: 0,
+      },
+      status: {
+        type: Boolean
+      }
+    },
+    swimming: {
+      perhour: {
+        type: Number,
+        default: 0,
+      },
+      perhalfaday: {
+        type: Number,
+        default: 0,
+      },
+      perday: {
+        type: Number,
+        default: 0,
+      },
+      perhalfmonth: {
+        type: Number
+      },
+      permonth: {
+        type: Number,
+        default: 0,
+      },
+      status: {
+        type: Boolean
+      }
+    },
+    soccer: {
+      perhour: {
+        type: Number,
+        default: 0,
+      },
+      perhalfaday: {
+        type: Number,
+        default: 0,
+      },
+      perday: {
+        type: Number,
+        default: 0,
+      },
+      perhalfmonth: {
+        type: Number
+      },
+      permonth: {
+        type: Number,
+        default: 0,
+      },
+      status: {
+        type: Boolean
+      }
+    },
+    tennis: {
+      perhour: {
+        type: Number,
+        default: 0,
+      },
+      perhalfaday: {
+        type: Number,
+        default: 0,
+      },
+      perday: {
+        type: Number,
+        default: 0,
+      },
+      perhalfmonth: {
+        type: Number
+      },
+      permonth: {
+        type: Number,
+        default: 0,
+      },
+      status: {
+        type: Boolean
+      }
+    },
   },
   customerUsed: [
     {
       userId: {
-        type: String
-      },
-      username: {
-        type: String
+        type: String,
+        ref: 'user'
       },
       from: {
         type: Date
@@ -138,7 +243,16 @@ const CenterSchema = new moongoose.Schema({
       to: {
         type: Date
       },
-      product: {
+      kindOfSport: {
+        type: String
+      },
+      status: {
+        type: String
+      },
+      price: {
+        type: String
+      },
+      note: {
         type: String
       }
     }
@@ -147,9 +261,6 @@ const CenterSchema = new moongoose.Schema({
     type: String
   },
   follower: {
-    type: [String]
-  },
-  following: {
     type: [String]
   },
   evaluation: [{

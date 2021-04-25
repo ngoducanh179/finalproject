@@ -19,6 +19,10 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 
+//center
+app.use('/api/center/profile', require('./routes/api/center'));
+
+
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

@@ -11,6 +11,9 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
   useEffect(() => {
     getPosts();
   }, [getPosts]);
+  const postSorted = posts && posts.sort(function(a,b){
+    return new Date(b.createAt) - new Date(a.createAt);
+  });
   return loading ? (
     <Spinner />
   ) : (
@@ -25,7 +28,7 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
       </p>
         <PostForm />
         <div className='posts'>
-          {posts.map(post => (
+          {postSorted && postSorted.map(post => (
             <PostItem key={post._id} post={post} />
           ))}
         </div>

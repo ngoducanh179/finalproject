@@ -7,7 +7,8 @@ const ProfileItem = ({
     hobies,
     avatar,
     fromWhere,
-    bio
+    bio,
+    user
   }
 }) => {
   return (
@@ -19,7 +20,7 @@ const ProfileItem = ({
           {<span> at {bio}</span>}
         </p>
         <p className='my-1 text-primary'>{fromWhere && <span>From: {fromWhere}</span>}</p>
-        <Link to={`/profile/${_id}`} className='btn button-primary'>
+        <Link to={`/profile/${user && user._id}`} className='btn button-primary'>
           Xem Trang Cá Nhân
         </Link>
       </div>

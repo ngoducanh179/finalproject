@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
@@ -11,14 +11,14 @@ import like from './svg/like.svg';
 import heart from './svg/heart.svg';
 import like_light from './svg/like_light.svg';
 import comment from './svg/comment.svg';
-import smile from './svg/smile.svg';
-import photo from './svg/photo.svg';
-import live_video from './svg/live_video.svg';
+// import smile from './svg/smile.svg';
+// import photo from './svg/photo.svg';
+// import live_video from './svg/live_video.svg';
 
-import share from './svg/share.svg';
+// import share from './svg/share.svg';
 import care from './svg/care.svg';
-import one from './images/1.jpg';
-import two from './images/post-1.jpg';
+// import one from './images/1.jpg';
+// import two from './images/post-1.jpg';
 import moment from 'moment'
 const PostItem = ({
   addLike,
@@ -28,6 +28,12 @@ const PostItem = ({
   showActions
 }) => {
   const fromNow = createAt && moment(createAt).fromNow();
+  const confirmModal =  () => {
+    const confirmBox = window.confirm('Bạn Có Chắc Chắn Muốn Xóa Bài Post Này')
+    if(confirmBox) {
+      deletePost(_id)
+    }
+  }
   return (
     <Fragment>
       <div className="mainPosts">
@@ -42,14 +48,24 @@ const PostItem = ({
               <span>{fromNow} <i className="fas fa-globe-americas"></i> </span>
             </div>
           </div>
-          <i className="fas fa-ellipsis-h"></i>
+          {/* {!auth.loading && user === auth.user._id && (
+              <button
+                onClick={e => deletePost(_id)}
+                type='button'
+                className='btn btn-danger'
+              >
+                <i className='fas fa-times'></i>
+              </button>
+            )} */}
+          {!auth.loading && user === auth.user._id && (
+            <i onClick={() => confirmModal()} className="fas fa-times"></i>
+          )}
         </div>
-
         <div className="mainPosts__description">
           {text}
         </div>
 
-        { img &&
+        {img &&
           <div>
             <img src={img} alt="" className='mainPosts__post' />
           </div>
@@ -70,23 +86,24 @@ const PostItem = ({
           </div>
         </div>
 
-        {showActions && 
+        {showActions &&
           <div className="mainPosts__likeShare">
-          <span onClick={e => addLike(_id)}>
-            <div className="svg">
-              <img src={like_light} alt="" />
-            </div>
-            <h3>Like</h3>
-          </span>
-          <Link to={`/post/${_id}`}>
-            <span>
-            <div className="svg">
-              <img src={comment} alt="" />
-            </div>
-            <h3>{comments.length ? comments.length : 0} Comment</h3>
+            <span onClick={e => addLike(_id)}>
+              <div className="svg">
+                <img src={like_light} alt="" />
+              </div>
+              <h3>Like</h3>
             </span>
-          </Link>
-        </div>
+            <Link to={`/post/${_id}`}>
+              <span>
+                <div className="svg">
+                  <img src={comment} alt="" />
+                </div>
+                <h3>{comments.length ? comments.length : 0} Comment</h3>
+              </span>
+            </Link>
+
+          </div>
         }
       </div>
     </Fragment>

@@ -12,6 +12,12 @@ const CommentItem = ({
   deleteComment
 }) => {
   const fromNow = date && moment(date).fromNow();
+  const confirmModal =  () => {
+    const confirmBox = window.confirm('Bạn Có Chắc Chắn Muốn Xóa Comment này Post Này')
+    if(confirmBox) {
+      deleteComment(postId, _id)
+    }
+  }
   return (
     <div className="mainPosts">
       <div className="mainPosts__title">
@@ -25,7 +31,10 @@ const CommentItem = ({
             <span>{fromNow} <i className="fas fa-globe-americas"></i> </span>
           </div>
         </div>
-        <i className="fas fa-ellipsis-h"></i>
+        
+        {!auth.loading && user === auth.user._id && (
+          <i onClick={e => confirmModal()} className="fas fa-times"></i>
+        )}
       </div>
 
       <div className="mainPosts__description">

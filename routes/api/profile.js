@@ -1,6 +1,8 @@
 const express = require('express');
 // const Profile = require('./../../models/Profile');
+const moment = require('moment')
 const Customer = require('../../models/Customer')
+const Center = require('../../models/Center')
 const router = express.Router();
 const request = require('request');
 const config = require('config');
@@ -9,20 +11,20 @@ const { check, validationResult } = require('express-validator');
 const auth = require('./../../middleware/auth');
 const Post = require('./../../models/Post');
 const { role, statusCustomer } = require('../../config/constant');
-const _ = require( 'lodash');
- router.get('/me', auth, async (req, res) => {
+const _ = require('lodash');
+const sendGrid = require('../../config/sendGrid')
+router.get('/me', auth, async (req, res) => {
   try {
     let profile
-    if(req.role === role.CUSTOMER) {
-       profile = await Customer.findOne({
+    if (req.role === role.CUSTOMER) {
+      profile = await Customer.findOne({
         user: req.user.id
-      }).populate('user', ['name', 'email', 'phone']);
+      }).populate('user', ['name', 'email', 'phone']).populate('history.centerId', ['centerName']);
     } else {
-       profile = await Customer.findOne({
+      profile = await Center.findOne({
         user: req.user.id
-      })
+      }).populate('customerUsed.userId', ['name'])
     }
-
 
     if (!profile) {
       return res.status(400).json({
@@ -86,9 +88,6 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (sex) profileFields.sex = sex;
     if (dateOfBirth) profileFields.dateOfBirth = dateOfBirth;
-    if (hobies) {
-      profileFields.hobies = hobies.split(',').map(hobie => hobie.trim());
-    }
     if (avatar) {
       profileFields.avatar = avatar;
     } else {
@@ -117,6 +116,9 @@ router.post(
       //create
 
       if (!customer) {
+        if (hobies) {
+          profileFields.hobies = hobies.split(',').map(hobie => hobie.trim());
+        }
         profileFields.updateAt = new Date();
         customer = new Customer(profileFields);
 
@@ -126,6 +128,7 @@ router.post(
 
       // update
       if (customer) {
+        
         profileFields.updateAt = new Date();
         customer = await Customer.findOneAndUpdate(
           {
@@ -142,7 +145,6 @@ router.post(
             console.log('something wrong when updating data');
           }
         );
-
         return res.json(customer);
       }
 
@@ -164,8 +166,8 @@ router.get('/', async (req, res) => {
   try {
     let profiles;
     const textSearch = req.query.query
-    if(!_.isEmpty(textSearch)) {
-      profiles = await Customer.find({$text: {$search: textSearch}}).populate('user', ['name', 'email']);
+    if (!_.isEmpty(textSearch)) {
+      profiles = await Customer.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
     } else {
       profiles = await Customer.find().populate('user', ['name', 'email'])
     }
@@ -179,18 +181,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+
 //@route    POST api/profile/user/:user_id
 
 // @desc    Get profile by user id
 
 // @access  public
-
 router.get('/user/:user_id', async (req, res) => {
   try {
     const profile = await Customer.findOne({
       user: req.params.user_id
-    }).populate('user', ['name', 'email']);
-
+    }).populate('user', ['name', 'email']).populate('history.centerId', ['centerName']);
     if (!profile)
       return res.status(400).json({
         msg: 'there no profile for this user'
@@ -457,6 +458,193 @@ router.get('/github/:username', (req, res) => {
   } catch (e) {
     console.error(e.message);
     res.status(500).send('server error');
+  }
+});
+
+
+
+
+// get all centers
+
+router.get('/centers', async (req, res) => {
+  try {
+    let centers;
+    const textSearch = req.query.query
+    if (!_.isEmpty(textSearch)) {
+      centers = await Center.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
+    } else {
+      centers = await Center.find().populate('user', ['name', 'email'])
+    }
+    res.json(centers);
+  } catch (e) {
+    console.error(e.message);
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// get center
+
+router.get('/center/:center_id', async (req, res) => {
+  try {
+    const center = await Center.findOne({
+      _id: req.params.center_id
+    }).populate('user', ['name', 'email', 'phone']);
+    if (!center)
+      return res.status(400).json({
+        msg: 'there no center for this user'
+      });
+    res.json(center);
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// get center
+
+router.get('/center/price/:center_id', async (req, res) => {
+  try {
+    const sports = await Center.findOne({
+      _id: req.params.center_id
+    }).select('sports');
+    if (!sports)
+      return res.status(400).json({
+        msg: 'there no center for this user'
+      });
+    res.json(sports);
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// Booking
+
+router.post('/center/booking/:sport/:userId/:centerId/', async (req, res) => {
+  try {
+    const { from, to, price, note } = req.body
+    const booking = {
+      userId: req.params.userId,
+      from,
+      to,
+      price,
+      kindOfSport: req.params.sport,
+      status: 'pending',
+      note,
+    }
+    const bookingUser = {
+      centerId: req.params.centerId,
+      from,
+      to,
+      price,
+      kindOfSport: req.params.sport,
+      status: 'pending',
+      note
+    }
+    const center = await Center.findOne({
+      _id: req.params.centerId
+    }).populate('user', ['name', 'email'])
+    const customer = await Customer.findOne({
+      user: req.params.userId
+    }).populate('user', ['name', 'email'])
+    await sendGrid(`${customer.user.name} Đã Đặt Lịch Vào Từ ${moment(from).format('YYYY/MM/DD')} Đến Ngày ${moment(to).format('YYYY/MM/DD')} Và Đang Ở Trạng Thái Pending`, [
+      {
+        email: center.user.email,
+        name: center.user.name
+      },
+      {
+        email: customer.user.email,
+        name: customer.user.name
+      }
+    ])
+    center.customerUsed.unshift(booking);
+    customer.history.unshift(bookingUser)
+    await center.save()
+    await customer.save()
+    if (!center || !customer)
+      return res.status(400).json({
+        msg: 'Không Thể Đặt Lịch'
+      });
+    res.json({ msg: 'Đặt Lịch Thành Công' });
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
+  }
+});
+
+// get center
+
+router.post('/center/order/:centerId/:orderId', async (req, res) => {
+  try {
+    const center = await Center.findOne({
+      _id: req.params.centerId
+    })
+    let orderConfirm = center.customerUsed.find(x => x._id.toString() === req.params.orderId);
+    const customer = await Customer.findOne({
+      user: orderConfirm.userId
+    }).populate('user', ['name', 'email'])
+
+    const orderConfirmCustomer = customer.history.find(y => {
+      return y.from.toString() == orderConfirm.from && y.to.toString() == orderConfirm.to && y.price.toString() == orderConfirm.price && y.kindOfSport.toString() == orderConfirm.kindOfSport && y.note.toString() == orderConfirm.note
+    });
+    if (!center || !customer)
+      return res.status(400).json({
+        msg: 'there no center for this user'
+      });
+    await Center.update({ 'customerUsed._id': req.params.orderId }, {
+      '$set': {
+        'customerUsed.$.status': req.body.status,
+      }
+    })
+
+    await Customer.update({ 'history._id': orderConfirmCustomer._id }, {
+      '$set': {
+        'history.$.status': req.body.status,
+      }
+    })
+
+    await sendGrid(`${customer.user.name} Phòng Tập Đã Xác Nhận lịch tập đã đặt Vào ${moment(orderConfirmCustomer.from).format('YYYY/MM/DD')} Đến Ngày ${moment(orderConfirmCustomer.to).format('YYYY/MM/DD')} Và Đang Ở Trạng Thái Confirm và Chờ ${customer.user.name} đến và sử dụng dịch vụ`, [
+      {
+        email: customer.user.email,
+        name: customer.user.name
+      }
+    ])
+    res.json({
+        msg: 'Update Trạng Thái Thành Công'
+      });
+  } catch (e) {
+    console.error(e.message);
+    if (e.kind == 'ObjectId') {
+      return res.status(400).json({
+        msg: 'profile not found'
+      });
+    }
+    res.status(500).json({
+      msg: 'server Error'
+    });
   }
 });
 

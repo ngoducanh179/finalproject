@@ -8,8 +8,9 @@ import { registerCustomer } from './../../actions/auth';
 import PropTypes from 'prop-types';
 import firebase from "../../assets/firebase/firebase";
 import 'firebase/auth';
+import { role } from '../../constans/constans'
 
-const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
+const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth }) => {
   var pattern = new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g);
   const [formData, setFormData] = useState({
     name: '',
@@ -70,8 +71,9 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
   const confirmOTP = async code => {
     try {
       const confirmInfo = await confirmSms.confirm(code);
+      console.log(222,confirmInfo);
       if(confirmInfo && confirmInfo.user && confirmInfo.user.phoneNumber) {
-        registerCustomer({ name, email, password, location, phone, confirm: true });
+           registerCustomer({ name, email, password, location, phone, confirm: true });
       } else {
         setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
       }
@@ -92,12 +94,15 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
       if (recaptcha) {
         const confirmation = await new firebase.auth().signInWithPhoneNumber(phoneplus, recaptcha)
         setConfirmSms(confirmation)
+        // registerCustomer({ name, email, password, location, phone, confirm: true });
         if (confirmation) setOpenModal(true)
       }
     }
   };
-  if (isAuthenticated) {
+  if (isAuthenticated && auth.role === role.CUSTOMER) {
     return <Redirect to='/dashboard' />;
+  } else if (isAuthenticated && auth.role === role.CENTER) {
+    return <Redirect to='/dashboard/center' />;
   }
 
   return (
@@ -229,14 +234,15 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated }) => {
 
   );
 };
-
+// otp.join("")
 RegisterCustomer.propTypes = {
   setAlert: PropTypes.func.isRequired,
   registerCustomer: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps, { setAlert, registerCustomer })(RegisterCustomer);

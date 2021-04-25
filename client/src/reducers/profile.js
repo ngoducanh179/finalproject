@@ -6,19 +6,27 @@ import {
   GET_PROFILES,
   GET_REPOS,
   CLEAR_PROFILES,
-  GET_PROFILEID
+  GET_PROFILEID,
+  GET_CENTER,
+  GET_CENTERID,
+  GET_CENTER_PRICE,
+  BOOKING_SCHEDULE,
+  UPDATE_ORDER
 } from '../actions/Types';
 
 const initialState = {
   profile: null,
   profileid: null,
+  centerid: null,
   profiles: [],
+  centers: [],
   repos: [],
   loading: true,
-  error: {}
+  error: {},
+  price:{}
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case GET_PROFILE:
@@ -32,6 +40,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profiles: payload,
+        loading: false
+      };
+    case GET_CENTER:
+      return {
+        ...state,
+        centers: payload,
         loading: false
       };
     case PROFILE_ERROR:
@@ -65,6 +79,28 @@ export default function(state = initialState, action) {
         profileid: payload,
         loading: false
       };
+      case GET_CENTERID:
+      return {
+        ...state,
+        centerid: payload,
+        loading: false
+      };
+      case GET_CENTER_PRICE:
+      return {
+        ...state,
+        price: payload,
+        loading: false
+      };
+      case BOOKING_SCHEDULE:
+      return {
+        ...state,
+        loading: false
+      };
+      case UPDATE_ORDER:
+        return {
+          ...state,
+          loading: false
+        };
     default:
       return state;
   }

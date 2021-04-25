@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 // import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { role } from '../../constans/constans'
 
 import { login } from '../../actions/auth';
 // import auth from '../../reducers/auth';
@@ -19,12 +20,12 @@ const LoginCenter = ({ login, isAuthenticated }) => {
   };
   const onSubmit = async e => {
     e.preventDefault();
-    login({ email, password });
+    login({ email, password, role: role.CENTER });
   };
 
   //Redirect if logged in
   if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
+    return <Redirect to='/dashboard/center' />;
   }
 
   return (
@@ -57,7 +58,7 @@ const LoginCenter = ({ login, isAuthenticated }) => {
         <input type='submit' className='button button-primary' value='Đăng Nhập' />
       </form>
       <p className='my-1'>
-        Don't have an account? <Link to='/register'>Đăng Kí</Link>
+        Don't have an account? <Link to='/Register/center'>Đăng Kí</Link>
       </p>
     </Fragment>
   );

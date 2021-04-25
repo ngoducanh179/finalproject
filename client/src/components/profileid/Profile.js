@@ -43,27 +43,11 @@ const Profile = ({
             <ProfileTop profileid={profileid} />
             <ProfileAbout profileid={profileid} />
             <div className='profile-exp p-2'>
-              <h2 className='text-primary'>Đã Từng Làm Việc Tại</h2>
+              <h2 className='text-primary'>Đã Từng Tập Luyện Tại</h2>
               {profileid.workedAt.length ? (
                 <Fragment>
-                  {profileid.workedAt.map((work, index) => (
+                  {profileid.history && profileid.history.map((his, index) => (
                     <ProfileExperience
-                      key={index}
-                      work={work}
-                    />
-                  ))}
-                </Fragment>
-              ) : (
-                <h4>Không Tìm Thấy ...</h4>
-              )}
-            </div>
-
-            <div className='profile-edu p-2'>
-              <h2 className='text-primary'>Lịch Sử Tập Luyện</h2>
-              {profileid.history.length ? (
-                <Fragment>
-                  {profileid.history.map((his, index) => (
-                    <ProfileEducation
                       key={index}
                       his={his}
                     />
@@ -73,6 +57,22 @@ const Profile = ({
                 <h4>Không Tìm Thấy ...</h4>
               )}
             </div>
+
+            {/* <div className='profile-edu p-2'>
+              <h2 className='text-primary'>Lịch Sử Tập Luyện</h2>
+              {profileid.history.length ? (
+                <Fragment>
+                  {profileid.history && profileid.history.map((his, index) => (
+                    index < 11 && <ProfileEducation
+                      key={index}
+                      his={his}
+                    />
+                  ))}
+                </Fragment>
+              ) : (
+                <h4>Không Tìm Thấy ...</h4>
+              )}
+            </div> */}
             {/* {profileid.githubusername && (
               <ProfileGithub username={profileid.githubusername} />
             )} */}
