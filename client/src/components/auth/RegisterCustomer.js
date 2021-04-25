@@ -68,18 +68,19 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
       element.nextSibling.focus();
     }
   };
-  // const confirmOTP = async code => {
-  //   try {
-  //     // const confirmInfo = await confirmSms.confirm(code);
-  //     // if(confirmInfo && confirmInfo.user && confirmInfo.user.phoneNumber) {
-  //         //  registerCustomer({ name, email, password, location, phone, confirm: true });
-  //     // } else {
-  //     //   setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
-  //     // }
-  //   } catch (error) {
-  //     setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
-  //   }
-  // }
+  const confirmOTP = async code => {
+    try {
+      const confirmInfo = await confirmSms.confirm(code);
+      console.log(222,confirmInfo);
+      if(confirmInfo && confirmInfo.user && confirmInfo.user.phoneNumber) {
+           registerCustomer({ name, email, password, location, phone, confirm: true });
+      } else {
+        setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
+      }
+    } catch (error) {
+      setAlert('Không Thể Xác Nhận Số Điện Thoại', 'error')
+    }
+  }
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
@@ -87,15 +88,15 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
     } else if (!pattern.test(phone)) {
       setAlert('Số Điện Thoại Không Hợp Lệ', 'danger');
     } else {
-      // let phoneplus = phone.substring(1);
-      // phoneplus = '+84' + phoneplus;
-      // const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
-      // if (recaptcha) {
-      //   const confirmation = await new firebase.auth().signInWithPhoneNumber(phoneplus, recaptcha)
-      //   setConfirmSms(confirmation)
-      //   if (confirmation) setOpenModal(true)
-      // }
-      registerCustomer({ name, email, password, location, phone, confirm: true });
+      let phoneplus = phone.substring(1);
+      phoneplus = '+84' + phoneplus;
+      const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
+      if (recaptcha) {
+        const confirmation = await new firebase.auth().signInWithPhoneNumber(phoneplus, recaptcha)
+        setConfirmSms(confirmation)
+        // registerCustomer({ name, email, password, location, phone, confirm: true });
+        if (confirmation) setOpenModal(true)
+      }
     }
   };
   if (isAuthenticated && auth.role === role.CUSTOMER) {
@@ -216,9 +217,9 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
                         </button>
                       <button
                         className="btn button-primary"
-                        // onClick={e =>
-                        //   confirmOTP()
-                        // }
+                        onClick={e =>
+                          confirmOTP(otp.join(""))
+                        }
                       >
                         Verify OTP
                         </button>
