@@ -164,15 +164,15 @@ router.post(
 
 router.get('/', async (req, res) => {
   try {
-    let profiles;
-    const textSearch = req.query.query
-    if (!_.isEmpty(textSearch)) {
-      profiles = await Customer.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
-    } else {
-      profiles = await Customer.find().populate('user', ['name', 'email'])
-    }
-    totalCount = await Customer.countDocuments()
-    res.json(profiles);
+      let profiles;
+      const textSearch = req.query.query
+      if (!_.isEmpty(textSearch)) {
+        profiles = await Customer.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
+      } else {
+        profiles = await Customer.find().populate('user', ['name', 'email'])
+      }
+      totalCount = await Customer.countDocuments()
+      res.json(profiles);
   } catch (e) {
     console.error(e.message);
     res.status(500).json({

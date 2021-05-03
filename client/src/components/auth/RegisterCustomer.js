@@ -102,7 +102,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
   if (isAuthenticated && auth.role === role.CUSTOMER) {
     return <Redirect to='/dashboard' />;
   } else if (isAuthenticated && auth.role === role.CENTER) {
-    return <Redirect to='/dashboard/center' />;
+    return <Redirect to='/dashboard/customer' />;
   }
 
   return (
