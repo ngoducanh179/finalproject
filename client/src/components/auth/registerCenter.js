@@ -94,6 +94,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
             const recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
             if (recaptcha) {
                 const confirmation = await new firebase.auth().signInWithPhoneNumber(phoneplus, recaptcha)
+                console.log(222,confirmation);
                 setConfirmSms(confirmation)
                 if (confirmation) setOpenModal(true)
             }
@@ -102,7 +103,7 @@ const RegisterCustomer = ({ setAlert, registerCustomer, isAuthenticated, auth })
     if (isAuthenticated && auth.role === role.CUSTOMER) {
         return <Redirect to='/dashboard' />;
     } else if (isAuthenticated && auth.role === role.CENTER) {
-        return <Redirect to='/DashboardCenter' />;
+        return <Redirect to='/dashboard/center' />;
     }
 
     return (

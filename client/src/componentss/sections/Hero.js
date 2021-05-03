@@ -65,7 +65,7 @@ const Hero = ({
             </h1>
             <div className="container-xs">
               <p className="m-0 mb-32 reveal-from-bottom" data-reveal-delay="400">
-                Our landing page template works on all devices, so you only have to set it up once, and get beautiful results forever.
+                Tom Fit landing website sử dụng cho mọi thiết bị
                 </p>
               <div className="reveal-from-bottom" data-reveal-delay="600">
                 <ButtonGroup>
@@ -88,7 +88,7 @@ const Hero = ({
             >
               <Image
                 className="has-shadow"
-                src={require('./../../assets/images/video-placeholder.jpg')}
+                src={require('./../../assets/images/gym1.jpg')}
                 alt="Hero"
                 width={896}
                 height={504} />
@@ -98,7 +98,7 @@ const Hero = ({
             id="video-modal"
             show={videoModalActive}
             handleClose={closeModal}
-            video="https://player.vimeo.com/video/174002812"
+            video="https://player.vimeo.com/video/359553297"
             videoTag="iframe" />
         </div>
       </div>
