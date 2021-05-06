@@ -471,7 +471,9 @@ router.get('/centers', async (req, res) => {
     let centers;
     const textSearch = req.query.query
     if (!_.isEmpty(textSearch)) {
+      console.log(textSearch);
       centers = await Center.find({ $text: { $search: textSearch } }).populate('user', ['name', 'email']);
+      console.log(centers,333);
     } else {
       centers = await Center.find().populate('user', ['name', 'email'])
     }
