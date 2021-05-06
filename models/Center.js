@@ -7,7 +7,7 @@ const CenterSchema = new moongoose.Schema({
   },
   centerName: {
     type: String,
-    text: true
+    // text: true
   },
   website: {
     type: String
@@ -297,5 +297,5 @@ const CenterSchema = new moongoose.Schema({
     default: Date.now
   }
 });
-
+CenterSchema.index({centerName : 'text'})
 module.exports = Center = moongoose.model('Center', CenterSchema);

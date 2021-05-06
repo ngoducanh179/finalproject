@@ -22,8 +22,8 @@ import CreateProfileCenter from './components//profile-form/CreateProfileCenter'
 import EditsProfileCenter from './components/profile-form/EditsProfileCenter';
 import EditsProfile from './components/profile-form/EditsProfile';
 
-import AddExperience from './components//profile-form/AddExperience';
-import AddEducation from './components//profile-form/AddEducation';
+// import AddExperience from './components//profile-form/AddExperience';
+// import AddEducation from './components//profile-form/AddEducation';
 import PrivateRoute from './routing/PrivateRoute';
 import Profiles from './components/profile/Profiles';
 import Centers from './components/centers/Centers';
@@ -89,7 +89,7 @@ const App = () => {
                   path='/edit-profile'
                   component={EditsProfile}
                 />
-                <PrivateRoute
+                {/* <PrivateRoute
                   exact
                   path='/add-experience'
                   component={AddExperience}
@@ -98,7 +98,7 @@ const App = () => {
                   exact
                   path='/add-education'
                   component={AddEducation}
-                />
+                /> */}
                 <PrivateRoute exact path='/posts' component={Posts} />
                 <PrivateRoute exact path='/post/:id' component={Post} />
               </Switch>
